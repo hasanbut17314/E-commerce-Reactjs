@@ -6,3 +6,52 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif !important;
 }
+
+.hero-slider .slick-dots {
+    bottom: 8px !important;
+}
+
+.hero-slider .slick-dots li button:before{
+    color: #fff !important;
+}
+
+.featuredSlider .css-1kd2knt-MuiButtonBase-root-MuiIconButton-root::before {
+    display: none !important;
+}
+
+.featuredSlider .css-1kd2knt-MuiButtonBase-root-MuiIconButton-root {
+    display: inline-flex !important;
+    padding: 20px !important;
+    background-color: rgb(133, 133, 133);
+}
+
+.featuredSlider .css-1kd2knt-MuiButtonBase-root-MuiIconButton-root:hover {
+    background-color: rgb(67, 67, 67);
+    color: #fff !important;
+}
+
+.featuredSlider .slick-prev {
+    padding-left: 23px !important;
+    padding-right: 18px !important;
+}
+
+.featuredSlider .slick-slide {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.sm-navbar a {
+    font-size: 1rem;
+    padding: 12px 14px;
+}
+
+@media screen and (max-width: 600px) {
+    .featuredSlider .slick-prev {
+        left: 0 !important;
+    }
+
+    .featuredSlider .slick-next {
+        right: 0 !important;
+    }
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Badge, Menu, MenuItem, Box, InputBase, Modal, Container, Drawer, List, ListItem, ListItemText, Divider } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Badge, Menu, MenuItem, Box, InputBase, Modal, Container, Drawer, Divider } from '@mui/material';
 import { Search, ShoppingCart, AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
 import logo2 from '../assets/marty_second.png'
 import { NavLink } from 'react-router-dom';
@@ -19,14 +19,14 @@ const SearchModal = ({ open, handleClose }) => (
   >
     <Box
       sx={{
-        width: '50%',
+        width: { xs: '90%', sm: '80%', md: '70%', lg: '50%' },
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
-        p: 2,
         display: 'flex',
         alignItems: 'center',
       }}
+      className="lg:p-4 md:p-3 p-2"
     >
       <InputBase
         placeholder="Search…"
@@ -64,15 +64,15 @@ const Navbar = () => {
 
   return (
     <AppBar position="static" sx={{ bgcolor: 'primary.main' }}>
-      <Container>
+      <Container maxWidth="xl" sx={{ paddingX: { xs: 0, md: 2 } }}>
         <Toolbar>
           {/* Left Side: Logo */}
           <Typography sx={{ flexGrow: 1 }}>
-            <img src={logo2} className='w-32' alt="" />
+            <img src={logo2} className='md:w-32 w-28' alt="" />
           </Typography>
 
           {/* Center: Nav Items - Hidden on Small Screens */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'space-evenly', mr: 6 }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'space-evenly', mr: 10, fontSize: 18 }}>
             <NavLink to='/'>Home</NavLink>
             <NavLink to='/about'>About</NavLink>
             <NavLink to='/products'>Products</NavLink>
@@ -90,7 +90,9 @@ const Navbar = () => {
                 <ShoppingCart />
               </Badge>
             </IconButton>
-            <IconButton color="inherit" onClick={handleMenuOpen}>
+            <IconButton color="inherit" onClick={handleMenuOpen}
+              sx={{ display: { xs: 'none', md: 'flex' } }}
+            >
               <AccountCircle />
             </IconButton>
             <Menu
@@ -98,11 +100,15 @@ const Navbar = () => {
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              {['Account', 'Track Order', 'Settings'].map((item) => (
-                <MenuItem key={item} onClick={handleMenuClose}>
-                  {item}
-                </MenuItem>
-              ))}
+              <MenuItem>
+                <NavLink>Account</NavLink>
+              </MenuItem>
+              <MenuItem>
+                <NavLink>Track Order</NavLink>
+              </MenuItem>
+              <MenuItem>
+                <NavLink>Settings</NavLink>
+              </MenuItem>
             </Menu>
           </Box>
 
@@ -114,30 +120,25 @@ const Navbar = () => {
           </Box>
         </Toolbar>
       </Container>
-      
+
       {/* Drawer for Small Screens */}
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box
-          sx={{ width: 250 }}
+          sx={{ width: 250, display: 'flex', flexDirection: 'column' }}
           role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
+          className="sm-navbar"
         >
-          <List>
-            {['Home', 'About', 'Categories', 'Products', 'Contact Us'].map((item) => (
-              <ListItem button key={item}>
-                <ListItemText primary={item} />
-              </ListItem>
-            ))}
-          </List>
+          <NavLink to='/'>Home</NavLink>
+          <NavLink to='/about'>About</NavLink>
+          <NavLink to='/products'>Products</NavLink>
+          <NavLink to='/category'>Categories</NavLink>
+          <NavLink to='/contact'>Contact</NavLink>
           <Divider />
-          <List>
-            {['Account', 'Track Order', 'Settings'].map((item) => (
-              <ListItem button key={item}>
-                <ListItemText primary={item} />
-              </ListItem>
-            ))}
-          </List>
+          <NavLink>Account</NavLink>
+          <NavLink>Track Order</NavLink>
+          <NavLink>Settings</NavLink>
         </Box>
       </Drawer>
 
