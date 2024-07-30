@@ -46,6 +46,20 @@
     padding: 12px 14px;
 }
 
+.service h5 {
+    font-weight: 600;
+    margin: 8px 0;
+}
+
+.service img {
+    padding: 8px 0;
+}
+
+.service p {
+    text-align: center;
+    font-size: 14px;
+}
+
 @media screen and (max-width: 600px) {
     .featuredSlider .slick-prev {
         left: 0 !important;
