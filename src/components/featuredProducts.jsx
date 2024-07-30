@@ -60,7 +60,7 @@ const FeaturedProducts = () => {
 
     return (
         <Box sx={{ my: 4 }}>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom sx={{ marginInlineStart: 2 }}>
                 Featured Products
             </Typography>
             <Slider {...settings} className='featuredSlider flex justify-center items-center'>
