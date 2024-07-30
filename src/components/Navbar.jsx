@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Badge, Menu, MenuItem, Box, InputBase, Modal, Container, Drawer, Divider } from '@mui/material';
 import { Search, ShoppingCart, AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
 import logo2 from '../assets/marty_second.png'
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const SearchModal = ({ open, handleClose }) => (
   <Modal
@@ -85,11 +85,13 @@ const Navbar = () => {
             <IconButton color="inherit" onClick={handleSearchOpen}>
               <Search />
             </IconButton>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="error">
-                <ShoppingCart />
-              </Badge>
-            </IconButton>
+            <Link to='/cart'>
+              <IconButton color="inherit">
+                <Badge invisible={false} badgeContent={4} color="error">
+                  <ShoppingCart />
+                </Badge>
+              </IconButton>
+            </Link>
             <IconButton color="inherit" onClick={handleMenuOpen}
               sx={{ display: { xs: 'none', md: 'flex' } }}
             >
