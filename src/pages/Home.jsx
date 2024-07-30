@@ -4,6 +4,7 @@ import { Container, Divider } from '@mui/material'
 import FeaturedProducts from '../components/featuredProducts'
 import PopularCategories from '../components/popularCategory'
 import Newsletter from '../components/Newsletter'
+import Footer from '../components/Footer'
 import s1 from '../assets/service_img/delivery.svg'
 import s2 from '../assets/service_img/payment.svg'
 import s3 from '../assets/service_img/moneyback.svg'
@@ -51,6 +52,7 @@ function Home() {
         </div>
         <Newsletter />
       </Container>
+      <Footer />
     </>
   )
 }
