@@ -1,8 +1,5 @@
-import { useState } from 'react'
 import './App.css'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer';
-import { BrowserRouter, Routes, Route, Router } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -10,27 +7,62 @@ import Products from './pages/Products';
 import Category from './pages/Category';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import Login from './pages/Login';
+import Signup from './pages/Register';
+import Layout from './Layout';
 
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <Layout />,
+      children: [
+        {
+          path: '',
+          element: <Home />
+        },
+        {
+          path: '/about',
+          element: <About />
+        },
+        {
+          path: '/contact',
+          element: <Contact />
+        },
+        {
+          path: '/products',
+          element: <Products />
+        },
+        {
+          path: '/categories',
+          element: <Category />
+        },
+        {
+          path: '/cart',
+          element: <Cart />
+        },
+        {
+          path: '/checkout',
+          element: <Checkout />
+        }
+      ]
+    },
+    {
+      path: '/login',
+      element: <Login />
+    },
+    {
+      path: '/signup',
+      element: <Signup />
+    }
+  ])
 
   return (
-    <>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path='/products' element={<Products />} />
-          <Route path='/category' element={<Category />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/checkout' element={<Checkout />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </>
+
+    <RouterProvider router={router} />
+
   )
 }
 
