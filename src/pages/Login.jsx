@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Paper, Box, IconButton, InputAdornment } from '@mui/material';
+import { TextField, Button, Typography, Container, Paper, Box, IconButton, InputAdornment, Divider } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -32,38 +32,16 @@ const Login = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} className="p-6 mt-10">
-        <Typography variant="h5" className="mb-6 text-center">
+    <Container maxWidth="xl" sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#0093E9', backgroundImage: 'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)' }}>
+      <Paper elevation={3} className="p-6 w-[460px]">
+        <Typography variant="h5" mb={2} className="text-center" fontWeight={600}>
           Login
         </Typography>
-        <Box className="flex justify-between mb-6">
-          <Button
-            variant="contained"
-            fullWidth
-            color="secondary"
-            startIcon={<GoogleIcon />}
-            className="mr-2"
-            onClick={() => console.log('Login with Google')}
-            style={{ backgroundColor: '#DB4437', color: '#FFFFFF' }}
-          >
-            Google
-          </Button>
-          <Button
-            variant="contained"
-            fullWidth
-            color="primary"
-            startIcon={<FacebookIcon />}
-            onClick={() => console.log('Login with Facebook')}
-            style={{ backgroundColor: '#4267B2', color: '#FFFFFF' }}
-          >
-            Facebook
-          </Button>
-        </Box>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <TextField
             label="Username or Email"
             variant="outlined"
+            required
             fullWidth
             name="usernameOrEmail"
             value={form.usernameOrEmail}
@@ -72,6 +50,7 @@ const Login = () => {
           <TextField
             label="Password"
             variant="outlined"
+            required
             fullWidth
             type={showPassword ? 'text' : 'password'}
             name="password"
@@ -91,13 +70,36 @@ const Login = () => {
               ),
             }}
           />
-          <Box className="flex justify-center mt-6">
+          <Box className="flex justify-center mt-3">
             <Button variant="contained" color="primary" type="submit">
               Login
             </Button>
           </Box>
         </form>
-        <Typography variant="body2" className="mt-4 text-center">
+        <Divider sx={{ my: 3 }} />
+        <Box>
+          <Button
+            variant="outlined"
+            fullWidth
+            color='warning'
+            startIcon={<GoogleIcon />}
+            onClick={() => console.log('Login with Google')}
+            sx={{ mb: 1 }}
+          >
+            Login with Google
+          </Button>
+          <Button
+            variant="outlined"
+            fullWidth
+            color="primary"
+            startIcon={<FacebookIcon />}
+            onClick={() => console.log('Login with Facebook')}
+            sx={{ mt: 0.5 }}
+          >
+            Login with Facebook
+          </Button>
+        </Box>
+        <Typography variant="body2" mt={3} className="text-center">
           Don't have an account? <Link to="/signup" className="text-blue-500">Register here</Link>
         </Typography>
       </Paper>
