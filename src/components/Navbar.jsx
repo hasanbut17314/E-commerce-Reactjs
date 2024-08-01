@@ -135,8 +135,8 @@ const Navbar = () => {
           <NavLink to='/'>Home</NavLink>
           <NavLink to='/about'>About</NavLink>
           <NavLink to='/products'>Products</NavLink>
-          <NavLink to='/category'>Categories</NavLink>
-          <NavLink to='/contact'>Contact</NavLink>
+          <NavLink to='/categories'>Categories</NavLink>
+          <NavLink to='/contact'>Contact Us</NavLink>
           <Divider />
           <NavLink>Account</NavLink>
           <NavLink>Track Order</NavLink>

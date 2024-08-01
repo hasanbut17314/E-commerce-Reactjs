@@ -9,8 +9,8 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Signup from './pages/Register';
-import Layout from './Layout';
-
+import Layout from './Layouts/Layout';
+import DashboardHome from './pages/dashboard/DashboardHome';
 
 function App() {
 
@@ -56,6 +56,10 @@ function App() {
     {
       path: '/signup',
       element: <Signup />
+    },
+    {
+      path: '/dashboard',
+      element: <DashboardHome />
     }
   ])
 
