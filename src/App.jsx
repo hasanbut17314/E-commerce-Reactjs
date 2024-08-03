@@ -13,6 +13,7 @@ import Layout from './Layouts/Layout';
 import DashboardLayout from './Layouts/DashboardLayout';
 import DashboardHome from './pages/dashboard/DashboardHome';
 import Categories from './pages/dashboard/DashboardCategory';
+import AdminProducts from './pages/dashboard/DashboardProducts';
 
 function App() {
 
@@ -71,6 +72,10 @@ function App() {
           path: '/dashboard/categories',
           element: <Categories />
         },
+        {
+          path: '/dashboard/products',
+          element: <AdminProducts />
+        }
       ]
     }
   ])

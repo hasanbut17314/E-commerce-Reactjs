@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Box, List, ListItem, ListItemIcon, ListItemText, Drawer, Typography } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CategoryIcon from '@mui/icons-material/Category';
@@ -23,25 +23,25 @@ const drawerWidth = 200;
 const DashboardSidebar = ({mobileOpen, handleDrawerToggle}) => {
 
   const drawer = (
-    <div className="h-full">
+    <div className="h-full sidebar">
       <div className="p-3 text-center">
         <img src={logo} alt="Martyz" className='h-14 w-40 mx-auto' />
       </div>
       <List>
         {menuItems.map((item, index) => (
-          <Link to={item.link} key={index} className="no-underline text-gray-700">
+          <NavLink to={item.link} key={index} className="no-underline text-gray-700">
             <ListItem button className="py-2 px-3">
               <ListItemIcon className="text-gray-700">{item.icon}</ListItemIcon>
               <ListItemText primary={<Typography variant="body1" className="font-medium">{item.text}</Typography>} />
             </ListItem>
-          </Link>
+          </NavLink>
         ))}
       </List>
     </div>
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex' }} className="dashboard-sidebar">
       <Drawer
         className='md:block hidden'
         variant="permanent"

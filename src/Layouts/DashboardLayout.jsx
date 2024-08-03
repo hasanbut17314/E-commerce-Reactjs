@@ -9,7 +9,7 @@ const DashboardLayout = () => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+  
   return (
     <div className="flex">
       <DashboardSidebar handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />

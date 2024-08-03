@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Box } from '@mui/material';
+import { Container, Typography, TextField, Button, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const AddCategoryForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+  const [status, setStatus] = useState('');
   const navigate = useNavigate();
 
   const handleTitleChange = (e) => {
@@ -14,6 +15,10 @@ const AddCategoryForm = () => {
 
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
+  };
+
+  const handleStatusChange = (e) => {
+    setStatus(e.target.value);
   };
 
   const handleImageChange = (e) => {
@@ -46,12 +51,29 @@ const AddCategoryForm = () => {
             onChange={handleTitleChange}
             required
           />
+          <FormControl fullWidth required>
+            <InputLabel id="status">Status</InputLabel>
+            <Select
+              labelId="status"
+              value={status}
+              label="Status *"
+              onChange={handleStatusChange}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value='Active'>Active</MenuItem>
+              <MenuItem value='Hidden'>Hidden</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             label="Description"
             variant="outlined"
             value={description}
             onChange={handleDescriptionChange}
             required
+            multiline
+            rows={4}
           />
           <Button
             variant="contained"
