@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import AddImageField from './AddImageField';
 
 const EditCategoryForm = ({ category }) => {
     const [title, setTitle] = useState(category?.title || '');
@@ -10,10 +11,6 @@ const EditCategoryForm = ({ category }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // handle update category logic here
-    };
-
-    const handleImageChange = (e) => {
-        setImage(e.target.files[0]);
     };
 
     return (
@@ -51,17 +48,7 @@ const EditCategoryForm = ({ category }) => {
                 rows={4}
                 required
             />
-            <Button
-                variant="contained"
-                component="label"
-            >
-                Image
-                <input
-                    type="file"
-                    hidden
-                    onChange={handleImageChange}
-                />
-            </Button>
+            <AddImageField onFileSelect={(file) => setImage(file)} />
             <Button type="submit" variant="contained" color="primary">
                 Update Category
             </Button>

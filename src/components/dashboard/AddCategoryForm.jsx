@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Container, TextField, Button, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import AddImageField from './AddImageField';
 
 const AddCategoryForm = () => {
   const [title, setTitle] = useState('');
@@ -21,10 +22,6 @@ const AddCategoryForm = () => {
     setStatus(e.target.value);
   };
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
@@ -39,9 +36,7 @@ const AddCategoryForm = () => {
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h5" mb={2}>
-        Add New Category
-      </Typography>
+      <h2 className='font-semibold mb-2'>Add Category</h2>
       <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column" gap={2}>
           <TextField
@@ -75,17 +70,7 @@ const AddCategoryForm = () => {
             multiline
             rows={4}
           />
-          <Button
-            variant="contained"
-            component="label"
-          >
-            Upload Image
-            <input
-              type="file"
-              hidden
-              onChange={handleImageChange}
-            />
-          </Button>
+          <AddImageField onFileSelect={(file) => setImage(file)} />
           <Button
             type="submit"
             variant="contained"

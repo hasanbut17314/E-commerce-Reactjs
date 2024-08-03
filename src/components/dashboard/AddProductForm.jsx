@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, MenuItem, FormControlLabel, Checkbox } from '@mui/material';
+import AddImageField from './AddImageField';
 
 const AddProductForm = () => {
   const [title, setTitle] = useState('');
@@ -11,13 +12,19 @@ const AddProductForm = () => {
   const [status, setStatus] = useState('Active');
   const [isFeatured, setIsFeatured] = useState(false);
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // handle add product logic here
+    console.log({
+      title,
+      description,
+      catId,
+      quantity,
+      price,
+      image,
+      status,
+      isFeatured,
+    });
   };
 
   return (
@@ -66,10 +73,6 @@ const AddProductForm = () => {
         fullWidth
         required
       />
-      <Button variant="contained" component="label">
-        Upload Image
-        <input type="file" hidden onChange={handleImageChange} />
-      </Button>
       <TextField
         label="Status"
         variant="outlined"
@@ -81,6 +84,7 @@ const AddProductForm = () => {
         <MenuItem value="Active">Active</MenuItem>
         <MenuItem value="Hidden">Hidden</MenuItem>
       </TextField>
+      <AddImageField onFileSelect={(file) => setImage(file)} />
       <FormControlLabel
         control={<Checkbox checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} />}
         label="Featured"
