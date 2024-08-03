@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, List, ListItem, ListItemIcon, ListItemText, Drawer, IconButton, Typography } from '@mui/material';
+import { Box, List, ListItem, ListItemIcon, ListItemText, Drawer, Typography } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import CategoryIcon from '@mui/icons-material/Category';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
 import OrderIcon from '@mui/icons-material/Assignment';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import logo from '../../assets/martyz_logo.png';
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, link: '/dashboard' },
@@ -21,17 +20,12 @@ const menuItems = [
 
 const drawerWidth = 240;
 
-const DashboardSidebar = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+const DashboardSidebar = ({mobileOpen, handleDrawerToggle}) => {
 
   const drawer = (
     <div className="h-full">
-      <div className="p-4 text-center">
-        <Typography variant="h5" className="font-bold">Admin Panel</Typography>
+      <div className="p-3 text-center">
+        <img src={logo} alt="Martyz" className='h-14 w-40 mx-auto' />
       </div>
       <List>
         {menuItems.map((item, index) => (
@@ -48,19 +42,10 @@ const DashboardSidebar = () => {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <IconButton
-        color="inherit"
-        aria-label="open drawer"
-        edge="start"
-        onClick={handleDrawerToggle}
-        sx={{ display: { md: 'none' }, margin: 1 }}
-      >
-        <MenuIcon />
-      </IconButton>
       <Drawer
+        className='md:block hidden'
         variant="permanent"
         sx={{
-          display: { xs: 'none', md: 'block' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
         }}
         open
@@ -72,7 +57,6 @@ const DashboardSidebar = () => {
         open={mobileOpen}
         onClose={handleDrawerToggle}
         sx={{
-          display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
         }}
       >

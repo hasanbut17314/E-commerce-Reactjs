@@ -10,7 +10,9 @@ import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Signup from './pages/Register';
 import Layout from './Layouts/Layout';
+import DashboardLayout from './Layouts/DashboardLayout';
 import DashboardHome from './pages/dashboard/DashboardHome';
+import Categories from './pages/dashboard/DashboardCategory';
 
 function App() {
 
@@ -59,7 +61,17 @@ function App() {
     },
     {
       path: '/dashboard',
-      element: <DashboardHome />
+      element: <DashboardLayout />,
+      children: [
+        {
+          path: '',
+          element: <DashboardHome />
+        },
+        {
+          path: '/dashboard/categories',
+          element: <Categories />
+        },
+      ]
     }
   ])
 
