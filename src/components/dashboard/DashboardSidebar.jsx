@@ -18,7 +18,7 @@ const menuItems = [
   { text: 'Settings', icon: <SettingsIcon />, link: '/dashboard/settings' },
 ];
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const DashboardSidebar = ({mobileOpen, handleDrawerToggle}) => {
 

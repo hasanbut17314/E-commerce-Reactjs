@@ -3,15 +3,14 @@ import { Card, CardContent, Typography, CardMedia } from '@mui/material';
 
 const CategoryCard = ({ category }) => {
   return (
-    <Card>
+    <Card sx={{height: { xs: 250, sm: 'auto' }}}>
       <CardMedia
         component="img"
-        height="140"
-        image={category.image || 'https://via.placeholder.com/150'}
+        image={category.image || 'https://via.placeholder.com/120'}
         alt={category.title}
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h6" component="div">
           {category.title}
         </Typography>
         <Typography variant="body2" color="text.secondary">

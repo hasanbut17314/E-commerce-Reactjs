@@ -13,9 +13,9 @@ const DashboardLayout = () => {
   return (
     <div className="flex">
       <DashboardSidebar handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
-      <div className="flex-grow md:ml-[240px]">
+      <div className="flex-grow md:ml-[200px]">
         <DashboardHeader handleDrawerToggle={handleDrawerToggle} />
-        <div className="p-3 mt-10">
+        <div className="p-3 mt-20">
           <Outlet />
         </div>
       </div>

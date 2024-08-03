@@ -6,7 +6,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import logo from '../../assets/marty_second.png';
 import { useState } from 'react';
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const DashboardHeader = ({ handleDrawerToggle }) => {
   const [anchorEl, setAnchorEl] = useState(null);
