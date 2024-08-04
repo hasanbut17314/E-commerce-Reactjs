@@ -14,6 +14,10 @@ import DashboardLayout from './Layouts/DashboardLayout';
 import DashboardHome from './pages/dashboard/DashboardHome';
 import Categories from './pages/dashboard/DashboardCategory';
 import AdminProducts from './pages/dashboard/DashboardProducts';
+import Orders from './pages/dashboard/Orders';
+import Users from './pages/dashboard/Users';
+import Settings from './pages/dashboard/Settings';
+import ViewProduct from './pages/ViewProduct';
 
 function App() {
 
@@ -37,6 +41,10 @@ function App() {
         {
           path: '/products',
           element: <Products />
+        },
+        {
+          path: '/product/:id',
+          element: <ViewProduct />
         },
         {
           path: '/categories',
@@ -75,6 +83,18 @@ function App() {
         {
           path: '/dashboard/products',
           element: <AdminProducts />
+        },
+        {
+          path: '/dashboard/orders',
+          element: <Orders />
+        },
+        {
+          path: '/dashboard/users',
+          element: <Users />
+        },
+        {
+          path: '/dashboard/settings',
+          element: <Settings />
         }
       ]
     }
