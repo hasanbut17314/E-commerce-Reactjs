@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Paper, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { useSignupMutation } from '../services/authApi';
 
 const Signup = () => {
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [signup, { isLoading, isSuccess, isError, error }] = useSignupMutation();
+
   const [form, setForm] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,10 +26,17 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(form);
+    if(form.password !== form.confirmPassword) {
+      alert('Passwords do not match');
+    }
+    try {
+      await signup(form).unwrap();
+      alert('User created successfully');
+    } catch (error) {
+      console.log("Error registering user:", error);
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -109,8 +120,8 @@ const Signup = () => {
             }}
           />
           <Box className="flex justify-center mt-6">
-            <Button variant="contained" color="primary" type="submit">
-              Sign Up
+            <Button variant="contained" color="primary" disabled={isLoading} type="submit">
+              {isLoading ? 'Loading...' : 'Sign Up'}
             </Button>
           </Box>
         </form>
