@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Paper, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSignupMutation } from '../services/authApi';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [fieldError, setFieldError] = useState('');
 
   const [signup, { isLoading, isSuccess, isError, error }] = useSignupMutation();
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     username: '',
@@ -24,18 +29,39 @@ const Signup = () => {
       ...form,
       [name]: value,
     });
+    setFieldError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(form.password !== form.confirmPassword) {
-      alert('Passwords do not match');
+      setFieldError('Passwords do not match');
+      form.password = '';
+      form.confirmPassword = '';
+      return;
     }
     try {
       await signup(form).unwrap();
-      alert('User created successfully');
+      if(isSuccess) {
+        toast.success('Account created successfully');
+      }
+      setForm({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      })
+      setTimeout(() => {
+        navigate('/login');
+      }, 2500)
     } catch (error) {
-      console.log("Error registering user:", error);
+      if (error.data) {
+        const err = error.data.non_field_errors;
+        const errMsg = Array.isArray(err) ? err.join(', ') : err;
+        toast.error(errMsg);
+      } else {
+        toast.error('Something went wrong')
+      }
     }
   };
 
@@ -119,6 +145,7 @@ const Signup = () => {
               ),
             }}
           />
+          {fieldError && <Typography variant="body2" color="error">{fieldError}</Typography>}
           <Box className="flex justify-center mt-6">
             <Button variant="contained" color="primary" disabled={isLoading} type="submit">
               {isLoading ? 'Loading...' : 'Sign Up'}
@@ -128,6 +155,11 @@ const Signup = () => {
         <Typography variant="body2" my={3} className="text-center">
           Already have an account? <Link to="/login" className="text-blue-500">Login here</Link>
         </Typography>
+        <ToastContainer 
+        autoClose={3000} 
+        position="bottom-center"
+        hideProgressBar={true}
+        />
       </Paper>
     </Container>
   );

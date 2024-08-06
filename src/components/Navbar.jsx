@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Badge, Menu, MenuItem, Box, InputBase, Modal, Container, Drawer, Divider } from '@mui/material';
 import { Search, ShoppingCart, AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
 import logo2 from '../assets/marty_second.png'
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../features/authSlice';
+import { useLogoutMutation } from '../services/authApi';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const SearchModal = ({ open, handleClose }) => (
   <Modal
@@ -62,8 +67,29 @@ const Navbar = () => {
     setDrawerOpen(open);
   };
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [logoutApi, { isLoading }] = useLogoutMutation();
+  const handleLogout = async () => {
+    try {
+      await logoutApi().unwrap();
+      dispatch(logout());
+      toast.success('Logout successful');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+    } catch (err) {
+      toast.error(err.message || 'Something went wrong');
+    }
+  };
+
   return (
     <AppBar position="static" sx={{ bgcolor: 'primary.main' }}>
+      <ToastContainer
+        autoClose={3000}
+        position="bottom-center"
+        hideProgressBar={true}
+      />
       <Container maxWidth="xl" sx={{ paddingX: { xs: 0, md: 2 } }}>
         <Toolbar>
           {/* Left Side: Logo */}
@@ -110,6 +136,9 @@ const Navbar = () => {
               </MenuItem>
               <MenuItem>
                 <NavLink>Settings</NavLink>
+              </MenuItem>
+              <MenuItem onClick={handleLogout} disabled={isLoading}>
+                <button>Logout</button>
               </MenuItem>
             </Menu>
           </Box>

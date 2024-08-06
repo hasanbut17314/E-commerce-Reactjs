@@ -4,12 +4,23 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '../services/authApi';
+import { setCredentials } from '../features/authSlice';
+import { useDispatch } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [form, setForm] = useState({
-    usernameOrEmail: '',
+    userEmail: '',
     password: '',
   });
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loginError, setLoginError] = useState('');
+  const [login, { isLoading, error }] = useLoginMutation();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -19,12 +30,27 @@ const Login = () => {
       ...form,
       [name]: value,
     });
+    setLoginError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(form);
+
+    if (!form.userEmail || !form.password) {
+      setLoginError('Please fill in all fields');
+      return;
+    }
+
+    try {
+      const response = await login(form).unwrap();
+      dispatch(setCredentials(response.data));
+      toast.success('Login successful');
+      setTimeout(() => {
+        navigate('/');
+      }, 2500);
+    } catch (err) {
+      setLoginError(err.message || 'Invalid username or password');
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -43,8 +69,8 @@ const Login = () => {
             variant="outlined"
             required
             fullWidth
-            name="usernameOrEmail"
-            value={form.usernameOrEmail}
+            name="userEmail"
+            value={form.userEmail}
             onChange={handleChange}
           />
           <TextField
@@ -70,9 +96,10 @@ const Login = () => {
               ),
             }}
           />
+          {loginError && <Typography variant="body2" color="error">{loginError}</Typography>}
           <Box className="flex justify-center mt-3">
-            <Button variant="contained" color="primary" type="submit">
-              Login
+            <Button variant="contained" disabled={isLoading} color="primary" type="submit">
+              {isLoading ? 'Loading...' : 'Login'}
             </Button>
           </Box>
         </form>
@@ -102,6 +129,11 @@ const Login = () => {
         <Typography variant="body2" mt={3} className="text-center">
           Don't have an account? <Link to="/signup" className="text-blue-500">Register here</Link>
         </Typography>
+        <ToastContainer
+          autoClose={3000}
+          position="bottom-center"
+          hideProgressBar={true}
+        />
       </Paper>
     </Container>
   );
