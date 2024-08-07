@@ -9,6 +9,7 @@ import { useState } from 'react';
 const drawerWidth = 200;
 
 const DashboardHeader = ({ handleDrawerToggle }) => {
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleProfileMenuOpen = (event) => {

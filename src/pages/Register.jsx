@@ -4,8 +4,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useSignupMutation } from '../services/authApi';
-import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+import notify from '../utils/notify';
 
 const Signup = () => {
 
@@ -34,7 +33,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(form.password !== form.confirmPassword) {
+    if (form.password !== form.confirmPassword) {
       setFieldError('Passwords do not match');
       form.password = '';
       form.confirmPassword = '';
@@ -42,8 +41,8 @@ const Signup = () => {
     }
     try {
       await signup(form).unwrap();
-      if(isSuccess) {
-        toast.success('Account created successfully');
+      if (isSuccess) {
+        notify.success('Account created successfully');
       }
       setForm({
         username: '',
@@ -51,16 +50,14 @@ const Signup = () => {
         password: '',
         confirmPassword: '',
       })
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000)
+      navigate('/login');
     } catch (error) {
       if (error.data) {
         const err = error.data.non_field_errors;
         const errMsg = Array.isArray(err) ? err.join(', ') : err;
-        toast.error(errMsg);
+        notify.error(errMsg);
       } else {
-        toast.error('Something went wrong')
+        notify.error('Something went wrong')
       }
     }
   };
@@ -155,11 +152,6 @@ const Signup = () => {
         <Typography variant="body2" my={3} className="text-center">
           Already have an account? <Link to="/login" className="text-blue-500">Login here</Link>
         </Typography>
-        <ToastContainer 
-        autoClose={3000} 
-        position="bottom-center"
-        hideProgressBar={true}
-        />
       </Paper>
     </Container>
   );

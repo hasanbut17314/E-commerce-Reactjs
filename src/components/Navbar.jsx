@@ -7,8 +7,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../features/authSlice';
 import { useLogoutMutation } from '../services/authApi';
 import useAuth from '../hooks/useAuth';
-import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+import notify from '../utils/notify';
 
 const SearchModal = ({ open, handleClose }) => (
   <Modal
@@ -75,12 +74,10 @@ const Navbar = () => {
     try {
       await logoutApi().unwrap();
       dispatch(logout());
-      toast.success('Logout successful');
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
+      notify.success('Logout successful');
+      navigate('/login');
     } catch (err) {
-      toast.error(err.message || 'Something went wrong');
+      notify.error(err.message || 'Something went wrong');
     }
   };
 
@@ -112,11 +109,6 @@ const Navbar = () => {
 
   return (
     <AppBar position="static" sx={{ bgcolor: 'primary.main' }}>
-      <ToastContainer
-        autoClose={3000}
-        position="bottom-center"
-        hideProgressBar={true}
-      />
       <Container maxWidth="xl" sx={{ paddingX: { xs: 0, md: 2 } }}>
         <Toolbar>
           {/* Left Side: Logo */}
@@ -190,7 +182,7 @@ const Navbar = () => {
               <NavLink>Settings</NavLink>
               <Link onClick={handleLogout} disabled={isLoading}>Logout</Link>
             </>
-          ): (
+          ) : (
             <>
               <NavLink to='/login'>Login</NavLink>
               <NavLink to='/signup'>Sign Up</NavLink>

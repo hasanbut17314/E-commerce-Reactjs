@@ -8,8 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../services/authApi';
 import { setCredentials } from '../features/authSlice';
 import { useDispatch } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+import notify from '../utils/notify';
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -45,16 +44,14 @@ const Login = () => {
       const response = await login(form).unwrap();
       const data = response.data;
       dispatch(setCredentials(data));
-      toast.success('Login successful');
+      notify.success('Login successful');
 
-      setTimeout(() => {
-        if(data.user.role === 'admin') {
-          navigate('/dashboard');
-        } else {
+      if (data.user.role === 'admin') {
+        navigate('/dashboard');
+      } else {
         navigate('/');
-        }
-      }, 2000);
-      
+      }
+
     } catch (err) {
       setLoginError(err.message || 'Invalid username or password');
     }
@@ -136,11 +133,6 @@ const Login = () => {
         <Typography variant="body2" mt={3} className="text-center">
           Don't have an account? <Link to="/signup" className="text-blue-500">Register here</Link>
         </Typography>
-        <ToastContainer
-          autoClose={3000}
-          position="bottom-center"
-          hideProgressBar={true}
-        />
       </Paper>
     </Container>
   );

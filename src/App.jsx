@@ -2,6 +2,8 @@ import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { store } from './App/store';
 import { Provider } from 'react-redux';
+import NotificationProvider from './services/NotificationProvider';
+import ProtectedRoute from './Layouts/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -72,7 +74,11 @@ function App() {
     },
     {
       path: '/dashboard',
-      element: <DashboardLayout />,
+      element: (
+        <ProtectedRoute>
+          <DashboardLayout />
+        </ProtectedRoute>
+      ),
       children: [
         {
           path: '',
@@ -104,7 +110,9 @@ function App() {
 
   return (
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <NotificationProvider>
+        <RouterProvider router={router} />
+      </NotificationProvider>
     </Provider>
   )
 }
