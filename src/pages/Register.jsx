@@ -53,7 +53,7 @@ const Signup = () => {
       })
       setTimeout(() => {
         navigate('/login');
-      }, 2500)
+      }, 2000)
     } catch (error) {
       if (error.data) {
         const err = error.data.non_field_errors;

@@ -43,11 +43,18 @@ const Login = () => {
 
     try {
       const response = await login(form).unwrap();
-      dispatch(setCredentials(response.data));
+      const data = response.data;
+      dispatch(setCredentials(data));
       toast.success('Login successful');
+
       setTimeout(() => {
+        if(data.user.role === 'admin') {
+          navigate('/dashboard');
+        } else {
         navigate('/');
-      }, 2500);
+        }
+      }, 2000);
+      
     } catch (err) {
       setLoginError(err.message || 'Invalid username or password');
     }

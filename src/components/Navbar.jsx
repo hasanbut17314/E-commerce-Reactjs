@@ -6,6 +6,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../features/authSlice';
 import { useLogoutMutation } from '../services/authApi';
+import useAuth from '../hooks/useAuth';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
@@ -83,6 +84,32 @@ const Navbar = () => {
     }
   };
 
+  const { isAuthenticated } = useAuth();
+
+  const authenticatedMenuItems = [
+    <MenuItem key="account">
+      <Link>Account</Link>
+    </MenuItem>,
+    <MenuItem key="track-order">
+      <Link>Track Order</Link>
+    </MenuItem>,
+    <MenuItem key="settings">
+      <Link>Settings</Link>
+    </MenuItem>,
+    <MenuItem key="logout" onClick={handleLogout} disabled={isLoading}>
+      <button>Logout</button>
+    </MenuItem>,
+  ];
+
+  const unauthenticatedMenuItems = [
+    <MenuItem key="login">
+      <Link to='/login'>Login</Link>
+    </MenuItem>,
+    <MenuItem key="signup">
+      <Link to='/signup'>Sign Up</Link>
+    </MenuItem>,
+  ];
+
   return (
     <AppBar position="static" sx={{ bgcolor: 'primary.main' }}>
       <ToastContainer
@@ -111,7 +138,7 @@ const Navbar = () => {
             <IconButton color="inherit" onClick={handleSearchOpen}>
               <Search />
             </IconButton>
-            <Link to='/cart'>
+            <Link to={isAuthenticated ? '/cart' : '/login'}>
               <IconButton color="inherit">
                 <Badge invisible={false} badgeContent={4} color="error">
                   <ShoppingCart />
@@ -128,18 +155,7 @@ const Navbar = () => {
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem>
-                <NavLink>Account</NavLink>
-              </MenuItem>
-              <MenuItem>
-                <NavLink>Track Order</NavLink>
-              </MenuItem>
-              <MenuItem>
-                <NavLink>Settings</NavLink>
-              </MenuItem>
-              <MenuItem onClick={handleLogout} disabled={isLoading}>
-                <button>Logout</button>
-              </MenuItem>
+              {isAuthenticated ? authenticatedMenuItems : unauthenticatedMenuItems}
             </Menu>
           </Box>
 
@@ -167,9 +183,19 @@ const Navbar = () => {
           <NavLink to='/categories'>Categories</NavLink>
           <NavLink to='/contact'>Contact Us</NavLink>
           <Divider />
-          <NavLink>Account</NavLink>
-          <NavLink>Track Order</NavLink>
-          <NavLink>Settings</NavLink>
+          {isAuthenticated ? (
+            <>
+              <NavLink>Account</NavLink>
+              <NavLink>Track Order</NavLink>
+              <NavLink>Settings</NavLink>
+              <Link onClick={handleLogout} disabled={isLoading}>Logout</Link>
+            </>
+          ): (
+            <>
+              <NavLink to='/login'>Login</NavLink>
+              <NavLink to='/signup'>Sign Up</NavLink>
+            </>
+          )}
         </Box>
       </Drawer>
 
