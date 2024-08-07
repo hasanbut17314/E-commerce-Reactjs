@@ -49,7 +49,10 @@ const Categories = () => {
     setOpenAdd(true);
   };
 
-  const handleCloseAdd = () => {
+  const handleCloseAdd = (_, reason) => {
+    if (reason === 'backdropClick') {
+      return;
+    }
     setOpenAdd(false);
   };
 
@@ -58,7 +61,10 @@ const Categories = () => {
     setOpenEdit(true);
   };
 
-  const handleCloseEdit = () => {
+  const handleCloseEdit = (_, reason) => {
+    if (reason === 'backdropClick') {
+      return;
+    }
     setOpenEdit(false);
     setSelectedCategory(null);
   };
@@ -150,14 +156,12 @@ const Categories = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         rowsPerPageOptions={[4, 8, 12]}
       />
-      <Dialog open={openAdd} onClose={handleCloseAdd} fullWidth maxWidth="sm">
-        <DialogContent>
-          <AddCategoryForm />
-        </DialogContent>
-      </Dialog>
+
+      <AddCategoryForm open={openAdd} close={handleCloseAdd} />
+
       <Dialog open={openEdit} onClose={handleCloseEdit} fullWidth maxWidth="sm">
         <DialogContent>
-          <EditCategoryForm category={selectedCategory} onClose={handleCloseEdit} />
+          <EditCategoryForm category={selectedCategory} />
         </DialogContent>
       </Dialog>
     </Box>
