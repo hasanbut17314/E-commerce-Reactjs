@@ -21,12 +21,7 @@ import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddProductForm from '../../components/dashboard/AddProductForm';
 import EditProductForm from '../../components/dashboard/EditProductForm';
-
-const dummyProducts = [
-  { id: 1, title: 'Product 1', status: 'Active', image: 'https://via.placeholder.com/120', isFeatured: true },
-  { id: 2, title: 'Product 2', status: 'Hidden', image: 'https://via.placeholder.com/120', isFeatured: false },
-  // Add more dummy products as needed
-];
+import { useFetchProductsQuery } from '../../services/productApi';
 
 const AdminProducts = () => {
   const [openAdd, setOpenAdd] = useState(false);
@@ -34,9 +29,16 @@ const AdminProducts = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleChangePage = (event, newPage) => {
+  const { data: response, isLoading } = useFetchProductsQuery({
+    page: page + 1,
+    limit: rowsPerPage,
+  });
+  const products = response?.data?.products || [];
+  const totalProducts = response?.data?.pagination.total || 0;
+
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
@@ -49,7 +51,10 @@ const AdminProducts = () => {
     setOpenAdd(true);
   };
 
-  const handleCloseAdd = () => {
+  const handleCloseAdd = (_, reason) => {
+    if (reason === 'backdropClick') {
+      return;
+    }
     setOpenAdd(false);
   };
 
@@ -73,8 +78,6 @@ const AdminProducts = () => {
     setAnchorEl(null);
   };
 
-  const paginatedProducts = dummyProducts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   return (
     <Box sx={{ px: { xs: 0, sm: 2 } }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -95,8 +98,8 @@ const AdminProducts = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedProducts.map((product) => (
-              <TableRow key={product.id}>
+            {products.map((product) => (
+              <TableRow key={product._id}>
                 <TableCell>
                   <img src={product.image} alt={product.title} width="50" height="50" />
                 </TableCell>
@@ -123,17 +126,16 @@ const AdminProducts = () => {
       </TableContainer>
       <TablePagination
         component="div"
-        count={dummyProducts.length}
+        count={totalProducts}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[5, 10, 15]}
       />
-      <Dialog open={openAdd} onClose={handleCloseAdd} fullWidth maxWidth="sm">
-        <DialogContent>
-          <AddProductForm />
-        </DialogContent>
-      </Dialog>
+      
+          <AddProductForm open={openAdd} close={handleCloseAdd} />
+        
       <Dialog open={openUpdate} onClose={handleCloseUpdate} fullWidth maxWidth="sm">
         <DialogContent>
           <EditProductForm product={selectedProduct} />
