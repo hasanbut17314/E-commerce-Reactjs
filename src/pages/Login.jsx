@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Paper, Box, IconButton, InputAdornment, Divider } from '@mui/material';
+import { TextField, Button, Typography, Container, Paper, Box, IconButton, InputAdornment, Divider, CircularProgress } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -103,7 +103,7 @@ const Login = () => {
           {loginError && <Typography variant="body2" color="error">{loginError}</Typography>}
           <Box className="flex justify-center mt-3">
             <Button variant="contained" disabled={isLoading} color="primary" type="submit">
-              {isLoading ? 'Loading...' : 'Login'}
+              {isLoading ? <CircularProgress size={24} /> : 'Login'}
             </Button>
           </Box>
         </form>

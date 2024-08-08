@@ -4,6 +4,7 @@ import customBaseQuery from './customBaseQuery';
 export const categoryApi = createApi({
     reducerPath: 'categoryApi',
     baseQuery: customBaseQuery,
+    tagTypes: ['Category'],
     endpoints: (builder) => ({
         createCategory: builder.mutation({
             query: (formData) => ({
@@ -11,17 +12,36 @@ export const categoryApi = createApi({
                 method: 'POST',
                 body: formData,
             }),
+            invalidatesTags: ['Category'],
+        }),
+        updateCategory: builder.mutation({
+            query: ({id, formData}) => ({
+                url: `/category/updateCategory/${id}`,
+                method: 'PUT',
+                body: formData,
+            }),
+            invalidatesTags: ['Category'],
         }),
         fetchCategories: builder.query({
-            query: () => ({
-                url: '/category/getAllCategories',
+            query: ({page=1, limit=10} = {}) => ({
+                url: `/category/getAllCategories?page=${page}&limit=${limit}`,
                 method: 'GET',
             }),
+            providesTags: ['Category'],
+        }),
+        deleteCategory: builder.mutation({
+            query: (id) => ({
+                url: `/category/deleteCategory/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Category'],
         }),
     }),
 });
 
 export const {
     useCreateCategoryMutation,
-    useFetchCategoriesQuery
+    useUpdateCategoryMutation,
+    useFetchCategoriesQuery,
+    useDeleteCategoryMutation
 } = categoryApi;

@@ -11,38 +11,31 @@ import {
   TableBody,
   TablePagination,
   Paper,
-  Dialog,
-  DialogContent,
   Menu,
   MenuItem,
   IconButton,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  DialogContentText
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddCategoryForm from '../../components/dashboard/AddCategoryForm';
 import EditCategoryForm from '../../components/dashboard/EditCategoryForm';
-
-const dummyCategories = [
-  { id: 1, title: 'Category 1', status: 'Active', image: 'https://via.placeholder.com/120' },
-  { id: 2, title: 'Category 2', status: 'Hidden', image: 'https://via.placeholder.com/120' },
-  { id: 3, title: 'Category 3', status: 'Active', image: 'https://via.placeholder.com/120' },
-  { id: 4, title: 'Category 4', status: 'Hidden', image: 'https://via.placeholder.com/120' },
-  { id: 5, title: 'Category 5', status: 'Active', image: 'https://via.placeholder.com/120' },
-  { id: 6, title: 'Category 6', status: 'Active', image: 'https://via.placeholder.com/120' },
-  { id: 7, title: 'Category 7', status: 'Hidden', image: 'https://via.placeholder.com/120' },
-  { id: 8, title: 'Category 8', status: 'Active', image: 'https://via.placeholder.com/120' },
-  { id: 9, title: 'Category 9', status: 'Hidden', image: 'https://via.placeholder.com/120' },
-  { id: 10, title: 'Category 10', status: 'Active', image: 'https://via.placeholder.com/120' },
-  { id: 11, title: 'Category 11', status: 'Hidden', image: 'https://via.placeholder.com/120' },
-  { id: 12, title: 'Category 12', status: 'Active', image: 'https://via.placeholder.com/120' },
-];
+import { useFetchCategoriesQuery } from '../../services/categoryApi';
+import { useDeleteCategoryMutation } from '../../services/categoryApi';
+import notify from '../../utils/notify';
 
 const Categories = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [openDel, setOpenDel] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(4);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpenAdd = () => {
@@ -91,11 +84,53 @@ const Categories = () => {
     handleOpenEdit(selectedCategory);
   };
 
-  const handleDeleteClick = () => {
-    handleMenuClose();
-    // Add your delete logic here
-    console.log(`Delete category: ${selectedCategory.title}`);
+  const handleDelClose = (_, reason) => {
+    if (reason === 'backdropClick') {
+      return;
+    }
+    setOpenDel(false);
+    setSelectedCategory(null);
   };
+
+  const delPressed = () => {
+    handleMenuClose();
+    setOpenDel(true);
+  };
+
+  const [deleteCategory, { isLoading: delLoading }] = useDeleteCategoryMutation();
+
+  const handleDeleteClick = async () => {
+    try {
+      await deleteCategory(selectedCategory._id).unwrap();
+      notify.success('Category deleted successfully');
+    } catch (error) {
+      notify.error(error.message || 'Something went wrong');
+    } finally {
+      handleDelClose();
+    }
+  };
+
+  const { data: response, isLoading, error } = useFetchCategoriesQuery({
+    page: page + 1,
+    limit: rowsPerPage,
+  });
+
+  const categories = response?.data?.categories || [];
+  const totalCategories = response?.data?.pagination?.total || 0;
+
+  if (isLoading) {
+    return <div className='flex justify-center mx-auto mt-40'>
+      <CircularProgress size={60} />
+    </div>
+  }
+
+  if (error) {
+    return <div className='flex justify-center mx-auto mt-40'>
+      <Typography variant="h6" color="error">
+        {error.message || 'Something went wrong'}
+      </Typography>
+    </div>;
+  }
 
   return (
     <Box sx={{ px: { xs: 0, sm: 2 } }}>
@@ -116,8 +151,8 @@ const Categories = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dummyCategories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category) => (
-              <TableRow key={category.id}>
+            {categories.map((category) => (
+              <TableRow key={category._id}>
                 <TableCell><img src={category.image} alt={category.title} style={{ width: 60, height: 60 }} /></TableCell>
                 <TableCell>{category.title}</TableCell>
                 <TableCell>{category.status}</TableCell>
@@ -139,7 +174,7 @@ const Categories = () => {
                     onClose={handleMenuClose}
                   >
                     <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                    <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+                    <MenuItem onClick={delPressed}>Delete</MenuItem>
                   </Menu>
                 </TableCell>
               </TableRow>
@@ -149,21 +184,40 @@ const Categories = () => {
       </TableContainer>
       <TablePagination
         component="div"
-        count={dummyCategories.length}
+        count={totalCategories}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        rowsPerPageOptions={[4, 8, 12]}
+        rowsPerPageOptions={[5, 10, 15]}
       />
 
       <AddCategoryForm open={openAdd} close={handleCloseAdd} />
 
-      <Dialog open={openEdit} onClose={handleCloseEdit} fullWidth maxWidth="sm">
+      <EditCategoryForm category={selectedCategory} open={openEdit} close={handleCloseEdit} />
+
+      <Dialog
+        open={openDel}
+        onClose={handleDelClose}
+      >
+        <DialogTitle textAlign={'center'}>
+          {"Confirm Deletion !!"}
+        </DialogTitle>
         <DialogContent>
-          <EditCategoryForm category={selectedCategory} />
+          <DialogContentText textAlign={'center'}>
+            Are you sure you want to delete {selectedCategory?.title} category? This action cannot be undone.
+          </DialogContentText>
         </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', gap: 2, pb: 3 }}>
+          {!delLoading && <Button onClick={handleDelClose} color="primary" variant='outlined'>
+            Cancel
+          </Button>}
+          <Button onClick={handleDeleteClick} color="error" variant='contained' autoFocus disabled={delLoading}>
+            {delLoading ? <CircularProgress size={24} /> : 'Delete'}
+          </Button>
+        </DialogActions>
       </Dialog>
+
     </Box>
   );
 };

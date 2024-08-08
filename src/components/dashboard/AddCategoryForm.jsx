@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, TextField, Button, Box, Select, MenuItem, InputLabel, FormControl, Dialog, DialogContent } from '@mui/material';
+import { Container, TextField, Button, Box, Select, MenuItem, InputLabel, FormControl, Dialog, DialogContent, CircularProgress } from '@mui/material';
 import AddImageField from './AddImageField';
 import { useCreateCategoryMutation } from '../../services/categoryApi';
 import notify from '../../utils/notify';
@@ -102,7 +102,7 @@ const AddCategoryForm = ({ open, close }) => {
                   color="primary"
                   disabled={isLoading}
                 >
-                  Add Category
+                  {isLoading ? <CircularProgress size={24} /> : 'Submit'}
                 </Button>
               </Box>
             </Box>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Paper, Box, IconButton, InputAdornment } from '@mui/material';
+import { TextField, Button, Typography, Container, Paper, Box, IconButton, InputAdornment, CircularProgress } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -145,7 +145,7 @@ const Signup = () => {
           {fieldError && <Typography variant="body2" color="error">{fieldError}</Typography>}
           <Box className="flex justify-center mt-6">
             <Button variant="contained" color="primary" disabled={isLoading} type="submit">
-              {isLoading ? 'Loading...' : 'Sign Up'}
+              {isLoading ? <CircularProgress size={24} /> : 'Sign Up'}
             </Button>
           </Box>
         </form>
