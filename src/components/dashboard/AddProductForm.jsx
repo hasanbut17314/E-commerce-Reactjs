@@ -8,7 +8,7 @@ import notify from '../../utils/notify';
 const AddProductForm = ({ open, close }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [catId, setCatId] = useState('');
+  const [cat_id, setcat_id] = useState('');
   const [quantity, setQuantity] = useState(0);
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState(null);
@@ -24,7 +24,7 @@ const AddProductForm = ({ open, close }) => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
-    formData.append('catId', catId);
+    formData.append('cat_id', cat_id);
     formData.append('quantity', quantity);
     formData.append('price', price);
     formData.append('image', image);
@@ -37,7 +37,7 @@ const AddProductForm = ({ open, close }) => {
       close();
       setTitle('');
       setDescription('');
-      setCatId('');
+      setcat_id('');
       setQuantity(0);
       setPrice(0);
       setImage(null);
@@ -73,7 +73,7 @@ const AddProductForm = ({ open, close }) => {
           />
           <FormControl fullWidth>
             <InputLabel id="category-label">Category</InputLabel>
-            <Select value={catId} onChange={(e) => setCatId(e.target.value)} labelId="category-label" label="Category">
+            <Select value={cat_id} onChange={(e) => setcat_id(e.target.value)} labelId="category-label" label="Category">
               {categories.map((category) => (
                 <MenuItem key={category._id} value={category._id}>
                   {category.title}
