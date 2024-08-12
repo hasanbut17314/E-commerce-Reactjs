@@ -2,31 +2,39 @@ import React, { useState } from 'react';
 import {
   Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
   Typography, FormControl, Select, MenuItem, IconButton, TablePagination, Button,
-  Dialog, DialogTitle, DialogContent, TextField
+  Dialog, DialogTitle, DialogContent, TextField,
+  InputLabel, CircularProgress, DialogActions, DialogContentText
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-
-const dummyUsers = [
-  { id: 1, username: 'User1', email: 'user1@example.com', role: 'user' },
-  { id: 2, username: 'User2', email: 'user2@example.com', role: 'admin' },
-  { id: 3, username: 'User3', email: 'user3@example.com', role: 'user' },
-  // Add more dummy users as needed
-];
+import { useFetchUsersQuery } from '../../services/userApi';
+import { useCreateUserMutation } from '../../services/userApi';
+import { useChangeUserRoleMutation } from '../../services/userApi';
+import { useDeleteUserMutation } from '../../services/userApi';
+import notify from '../../utils/notify';
 
 const Users = () => {
-  const [users, setUsers] = useState(dummyUsers);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [openDel, setOpenDel] = useState(false);
   const [open, setOpen] = useState(false);
   const [newUser, setNewUser] = useState({
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
     role: 'user'
   });
 
-  const handleChangePage = (event, newPage) => {
+  const { data: usersData, isLoading: isFetching, error } = useFetchUsersQuery({
+    page: page + 1,
+    limit: rowsPerPage
+  });
+  const users = usersData?.data?.users || [];
+  const totalUsers = usersData?.data?.pagination.total || 0;
+
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
@@ -35,16 +43,12 @@ const Users = () => {
     setPage(0);
   };
 
-  const handleDelete = (id) => {
-    const updatedUsers = users.filter(user => user.id !== id);
-    setUsers(updatedUsers);
-  };
-
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (_, reason) => {
+    if (reason === 'backdropClick') return;
     setOpen(false);
   };
 
@@ -53,10 +57,75 @@ const Users = () => {
     setNewUser({ ...newUser, [name]: value });
   };
 
-  const handleAddUser = () => {
-    setUsers([...users, { ...newUser, id: users.length + 1 }]);
-    handleClose();
+  const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
+
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    try {
+      await createUser(newUser).unwrap();
+      notify.success('User created successfully');
+      handleClose();
+      setNewUser({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        role: 'user'
+      })
+    } catch (error) {
+      notify.error(error.message || 'Something went wrong');
+    }
   };
+
+  const [changeUserRole] = useChangeUserRoleMutation();
+
+  const updateRole = async (role, userId) => {
+    try {
+      await changeUserRole({ id: userId, role }).unwrap();
+      notify.success('User role updated successfully');
+    } catch (error) {
+      notify.error(error.message || 'Something went wrong');
+    }
+  }
+
+  const handleDelClose = (_, reason) => {
+    if (reason === 'backdropClick') {
+      return;
+    }
+    setOpenDel(false);
+    setSelectedUser(null);
+  };
+
+  const delPressed = (Crntuser) => {
+    setOpenDel(true);
+    setSelectedUser(Crntuser);
+  };
+
+  const [deleteUser, { isLoading: delLoading }] = useDeleteUserMutation();
+
+  const handleDeleteClick = async () => {
+    try {
+      await deleteUser(selectedUser._id).unwrap();
+      notify.success('User deleted successfully');
+      handleDelClose();
+    } catch (error) {
+      notify.error(error.message || 'Something went wrong');
+    }
+  }
+
+  if (isFetching) {
+    return <div className='flex justify-center mx-auto mt-40'>
+      <CircularProgress size={60} />
+    </div>
+  }
+
+  if (error) {
+    return <div className='flex justify-center mx-auto mt-40'>
+      <Typography variant="h6" color="error">
+        {error.message || 'Something went wrong'}
+      </Typography>
+    </div>;
+  }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -77,20 +146,15 @@ const Users = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
-              <TableRow key={user.id}>
+            {users.map(user => (
+              <TableRow key={user._id}>
                 <TableCell>{user.username}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <FormControl variant="outlined" size="small">
                     <Select
                       value={user.role}
-                      onChange={(e) => {
-                        const updatedUsers = users.map(u => 
-                          u.id === user.id ? { ...u, role: e.target.value } : u
-                        );
-                        setUsers(updatedUsers);
-                      }}
+                      onChange={(e) => updateRole(e.target.value, user._id)}
                     >
                       <MenuItem value="user">User</MenuItem>
                       <MenuItem value="admin">Admin</MenuItem>
@@ -98,7 +162,7 @@ const Users = () => {
                   </FormControl>
                 </TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleDelete(user.id)}>
+                  <IconButton onClick={() => delPressed(user)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -110,16 +174,17 @@ const Users = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={users.length}
+        count={totalUsers}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <DialogTitle>Add New User</DialogTitle>
         <DialogContent>
-          <Box component="form" noValidate sx={{ mt: 2 }}>
+          <Box component="form" noValidate onSubmit={handleAddUser}>
             <TextField
               required
               fullWidth
@@ -148,7 +213,18 @@ const Users = () => {
               onChange={handleInputChange}
               margin="normal"
             />
+            <TextField
+              required
+              fullWidth
+              type="password"
+              label="Confirm Password"
+              name="confirmPassword"
+              value={newUser.confirmPassword}
+              onChange={handleInputChange}
+              margin="normal"
+            />
             <FormControl fullWidth margin="normal">
+              <InputLabel>Role</InputLabel>
               <Select
                 label="Role"
                 name="role"
@@ -159,13 +235,38 @@ const Users = () => {
                 <MenuItem value="admin">Admin</MenuItem>
               </Select>
             </FormControl>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-              <Button onClick={handleClose} color="secondary" sx={{ mr: 2 }}>Cancel</Button>
-              <Button onClick={handleAddUser} variant="contained" color="primary">Add User</Button>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2 }}>
+              {!isCreating && <Button onClick={handleClose} variant="outlined">Cancel</Button>}
+              <Button type='submit' variant="contained" color="primary" disabled={isCreating}>
+                {isCreating ? <CircularProgress size={24} /> : 'Add User'}
+              </Button>
             </Box>
           </Box>
         </DialogContent>
       </Dialog>
+
+      <Dialog
+        open={openDel}
+        onClose={handleDelClose}
+      >
+        <DialogTitle textAlign={'center'}>
+          {"Confirm Deletion !!"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText textAlign={'center'}>
+            Are you sure you want to delete {selectedUser?.username}? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', gap: 2, pb: 3 }}>
+          {!delLoading && <Button onClick={handleDelClose} color="primary" variant='outlined'>
+            Cancel
+          </Button>}
+          <Button onClick={handleDeleteClick} color="error" variant='contained' autoFocus disabled={delLoading}>
+            {delLoading ? <CircularProgress size={24} /> : 'Delete'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Box>
   );
 };
