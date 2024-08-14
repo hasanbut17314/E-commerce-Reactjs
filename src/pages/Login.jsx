@@ -6,8 +6,6 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../services/authApi';
-import { setCredentials } from '../features/authSlice';
-import { useDispatch } from 'react-redux';
 import notify from '../utils/notify';
 
 const Login = () => {
@@ -17,7 +15,6 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [loginError, setLoginError] = useState('');
   const [login, { isLoading, error }] = useLoginMutation();
 
@@ -43,7 +40,9 @@ const Login = () => {
     try {
       const response = await login(form).unwrap();
       const data = response.data;
-      dispatch(setCredentials(data));
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
+      localStorage.setItem('user', JSON.stringify(data.user));
       notify.success('Login successful');
 
       if (data.user.role === 'admin') {

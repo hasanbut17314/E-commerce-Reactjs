@@ -3,8 +3,6 @@ import { AppBar, Toolbar, IconButton, Typography, Badge, Menu, MenuItem, Box, In
 import { Search, ShoppingCart, AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
 import logo2 from '../assets/marty_second.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logout } from '../features/authSlice';
 import { useLogoutMutation } from '../services/authApi';
 import useAuth from '../hooks/useAuth';
 import notify from '../utils/notify';
@@ -68,12 +66,13 @@ const Navbar = () => {
   };
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [logoutApi, { isLoading }] = useLogoutMutation();
   const handleLogout = async () => {
     try {
       await logoutApi().unwrap();
-      dispatch(logout());
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
       notify.success('Logout successful');
       navigate('/login');
     } catch (err) {

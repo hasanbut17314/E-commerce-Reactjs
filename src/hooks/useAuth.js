@@ -1,7 +1,9 @@
 import { useSelector } from 'react-redux';
 
 const useAuth = () => {
-  const { user, accessToken } = useSelector((state) => state.auth);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const accessToken = localStorage.getItem('accessToken');
+
   return { user, accessToken, isAuthenticated: !!user };
 };
 
