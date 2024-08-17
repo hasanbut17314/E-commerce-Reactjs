@@ -15,7 +15,6 @@ function Home() {
       <Banner />
       <Container maxWidth="xl">
         <FeaturedProducts />
-        <PopularCategories />
         <div className='service flex flex-wrap lg:flex-nowrap mb-4 mt-8 sm:mt-24 justify-center'>
           <div className='flex flex-col items-center justify-center px-6 lg:py-0 py-5'>
             <img src={s1} alt="" />
@@ -49,6 +48,7 @@ function Home() {
             </p>
           </div>
         </div>
+        <PopularCategories />
         <Newsletter />
       </Container>
     </>

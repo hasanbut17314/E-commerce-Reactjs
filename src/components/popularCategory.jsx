@@ -1,29 +1,7 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Container, Grid } from '@mui/material';
+import { Card, CardContent, Typography, Box, Grid, Skeleton } from '@mui/material';
 import { styled } from '@mui/system';
-
-// Dummy SVG for category image
-const CategoryImage = styled('div')(({ theme }) => ({
-  width: 100,
-  height: 100,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  margin: '0 auto 16px',
-  svg: {
-    width: '50%',
-    height: '50%',
-    fill: theme.palette.primary,
-  },
-}));
-
-const categories = [
-  { id: 1, name: 'Category 1' },
-  { id: 2, name: 'Category 2' },
-  { id: 3, name: 'Category 3' },
-  { id: 4, name: 'Category 4' },
-  { id: 5, name: 'Category 5' },
-];
+import { useFetchCategoriesQuery } from '../services/categoryApi';
 
 const CategoryCard = styled(Card)(({ theme }) => ({
   textAlign: 'center',
@@ -38,27 +16,41 @@ const CategoryCard = styled(Card)(({ theme }) => ({
 }));
 
 const PopularCategories = () => {
+  const { data: response, isLoading } = useFetchCategoriesQuery({ limit: 5 });
+  const categories = response?.data?.categories || [];
+
   return (
-    <Box sx={{ mb: 4, mt: 8 }}>
-        <Typography variant="h6" gutterBottom sx={{ marginInlineStart: 2 }}>
-          Popular Categories
-        </Typography>
-        <Grid container spacing={3}>
-          {categories.map((category) => (
-            <Grid item key={category.id} xs={6} sm={3.4} md={3.4} lg={2.4}>
-              <CategoryCard>
-                <CategoryImage>
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm-1 14.93V11H8l4-4 4 4h-3v5.93a8.12 8.12 0 0 1-2 0z"/>
-                  </svg>
-                </CategoryImage>
-                <CardContent>
-                  <Typography variant='h6'>{category.name}</Typography>
+    <Box sx={{ mb: 2, mt: 8 }}>
+      <Typography variant="h6" sx={{ marginInlineStart: 2, mb: 3 }}>
+        Popular Categories
+      </Typography>
+      <Grid container spacing={3}>
+        {isLoading ? (
+          [...Array(5)].map((_, index) => (
+            <Grid item key={index} xs={6} sm={3.4} md={3.4} lg={2.4}>
+              <CategoryCard sx={{ height: '215px' }}>
+                <Skeleton variant="rectangular" width={96} height={96} sx={{ mx: 'auto', mt: 2 }} />
+                <CardContent sx={{ px: 0, pb: 0, pt: 1 }}>
+                  <Skeleton width="60%" sx={{ mx: 'auto' }} />
                 </CardContent>
               </CategoryCard>
             </Grid>
-          ))}
-        </Grid>
+          ))
+        ) : (
+          categories.map((category) => (
+            <Grid item key={category._id} xs={6} sm={3.4} md={3.4} lg={2.4}>
+              <CategoryCard sx={{ height: '215px' }}>
+                <img className='w-24 h-24 mx-auto' src={category.image} alt={category.title} />
+                <CardContent sx={{ px: 0, pb: 0, pt: 1 }}>
+                  <Typography sx={{ fontWeight: 600, mt: 2 }}>
+                    {category.title}
+                  </Typography>
+                </CardContent>
+              </CategoryCard>
+            </Grid>
+          ))
+        )}
+      </Grid>
     </Box>
   );
 };
