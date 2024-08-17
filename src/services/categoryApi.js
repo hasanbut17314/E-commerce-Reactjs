@@ -23,8 +23,8 @@ export const categoryApi = createApi({
             invalidatesTags: ['Category'],
         }),
         fetchCategories: builder.query({
-            query: ({page=1, limit=10} = {}) => ({
-                url: `/category/getAllCategories?page=${page}&limit=${limit}`,
+            query: ({page=1, limit=10, status} = {}) => ({
+                url: `/category/getAllCategories?page=${page}&limit=${limit}&status=${status || ''}`,
                 method: 'GET',
             }),
             providesTags: ['Category'],

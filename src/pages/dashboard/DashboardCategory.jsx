@@ -62,7 +62,7 @@ const Categories = () => {
     setSelectedCategory(null);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
@@ -179,6 +179,13 @@ const Categories = () => {
                 </TableCell>
               </TableRow>
             ))}
+            {categories.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4} sx={{ textAlign: 'center', py: 3, fontWeight: 'bold' }}>
+                  No Categories Found
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

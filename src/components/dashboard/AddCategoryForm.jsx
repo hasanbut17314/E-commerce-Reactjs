@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Box, Select, MenuItem, InputLabel, FormControl, Dialog, DialogContent, CircularProgress } from '@mui/material';
 import AddImageField from './AddImageField';
+import DescriptionEditor from './DescriptionEditor';
 import { useCreateCategoryMutation } from '../../services/categoryApi';
 import notify from '../../utils/notify';
 
@@ -15,10 +16,6 @@ const AddCategoryForm = ({ open, close }) => {
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
-  };
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
   };
 
   const handleStatusChange = (e) => {
@@ -76,15 +73,7 @@ const AddCategoryForm = ({ open, close }) => {
                   <MenuItem value='Hidden'>Hidden</MenuItem>
                 </Select>
               </FormControl>
-              <TextField
-                label="Description"
-                variant="outlined"
-                value={description}
-                onChange={handleDescriptionChange}
-                required
-                multiline
-                rows={4}
-              />
+              <DescriptionEditor value={description} setValue={setDescription} />
               <AddImageField onFileSelect={(file) => setImage(file)} />
               <Box display="flex" justifyContent="flex-end" gap={2}>
                 {!isLoading && (

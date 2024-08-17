@@ -170,6 +170,13 @@ const AdminProducts = () => {
                 </TableCell>
               </TableRow>
             ))}
+            {products.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} sx={{ textAlign: 'center', py: 3, fontWeight: 'bold' }}>
+                  No products found
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
