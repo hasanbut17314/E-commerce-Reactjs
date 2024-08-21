@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, TextField, MenuItem, FormControlLabel, Checkbox, FormControl, Select, InputLabel, Dialog, DialogContent, CircularProgress } from '@mui/material';
 import AddImageField from './AddImageField';
+import DescriptionEditor from './DescriptionEditor';
 import { useFetchCategoriesQuery } from '../../services/categoryApi';
 import { useUpdateProductMutation } from '../../services/productApi';
 import notify from '../../utils/notify';
@@ -67,16 +68,7 @@ const EditProductForm = ({ product, open, close }) => {
             fullWidth
             required
           />
-          <TextField
-            label="Description"
-            variant="outlined"
-            multiline
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            fullWidth
-            required
-          />
+          <DescriptionEditor value={description} setValue={setDescription} />
           <FormControl fullWidth>
             <InputLabel id="category-select-label">Category</InputLabel>
             <Select

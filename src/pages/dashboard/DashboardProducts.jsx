@@ -150,7 +150,7 @@ const AdminProducts = () => {
             {products.map((product) => (
               <TableRow key={product._id}>
                 <TableCell>
-                  <img src={product.image} alt={product.title} width="50" height="50" />
+                  <img src={product.image} alt={product.title} width="50" height="50" className='h-[50px]' />
                 </TableCell>
                 <TableCell>{product.title}</TableCell>
                 <TableCell>{product.status}</TableCell>

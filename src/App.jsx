@@ -2,7 +2,7 @@ import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { store } from './App/store';
 import { Provider } from 'react-redux';
-import NotificationProvider from './services/NotificationProvider';
+import NotificationProvider from './components/NotificationProvider';
 import ProtectedRoute from './Layouts/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';

@@ -15,10 +15,15 @@ export const productApi = createApi({
             invalidatesTags: ["Products"],
         }),
         fetchProducts: builder.query({
-            query: ({page=1, limit=10, status} = {}) => ({
-                url: `/products/getAllProducts?page=${page}&limit=${limit}&status=${status || ''}`,
-                method: "GET",
-            }),
+            query: ({page=1, limit=10, status, isFeatured} = {}) => {
+                let url = `/products/getAllProducts?page=${page}&limit=${limit}`;
+                if (status) url += `&status=${status}`;
+                if (isFeatured !== undefined) url += `&isFeatured=${isFeatured}`;
+                return {
+                    url: url,
+                    method: "GET",
+                }
+            },
             providesTags: ["Products"],
         }),
         updateProduct: builder.mutation({

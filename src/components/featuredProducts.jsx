@@ -1,6 +1,7 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { Card, CardMedia, CardContent, Typography, Button, Box } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Button, Box, Skeleton } from '@mui/material';
+import { useFetchProductsQuery } from '../services/productApi';
 import { styled } from '@mui/system';
 import { NextArrow, PrevArrow } from './Arrows';
 import "slick-carousel/slick/slick.css";
@@ -12,12 +13,16 @@ const ProductCard = styled(Card)(({ theme }) => ({
 
 const FeaturedProducts = () => {
 
+    const { data: productsData, isLoading, error } = useFetchProductsQuery({ limit: 5, isFeatured: true });
+    const products = productsData?.data?.products || [];
+
     const settings = {
         dots: true,
         infinite: true,
         speed: 500,
         slidesToShow: 5,
         slidesToScroll: 1,
+        arrows: !isLoading,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
         responsive: [
@@ -50,36 +55,55 @@ const FeaturedProducts = () => {
         ],
     };
 
-    const products = [
-        { id: 1, name: 'Product 1', price: '$100', image: 'https://via.placeholder.com/200', description: 'Short description of product 1' },
-        { id: 2, name: 'Product 2', price: '$200', image: 'https://via.placeholder.com/200', description: 'Short description of product 2' },
-        { id: 3, name: 'Product 3', price: '$300', image: 'https://via.placeholder.com/200', description: 'Short description of product 3' },
-        { id: 4, name: 'Product 4', price: '$400', image: 'https://via.placeholder.com/200', description: 'Short description of product 4' },
-        { id: 5, name: 'Product 5', price: '$500', image: 'https://via.placeholder.com/200', description: 'Short description of product 5' },
-    ];
-
     return (
         <Box sx={{ my: 4 }}>
             <Typography variant="h6" gutterBottom sx={{ marginInlineStart: 2 }}>
                 Featured Products
             </Typography>
             <Slider {...settings} className='featuredSlider flex justify-center items-center'>
-                {products.map((product) => (
-                    <ProductCard key={product.id} sx={{ width: { xs: '270px !important', sm: '240px !important' } }}>
-                        <CardMedia
-                            component="img"
-                            image={product.image}
-                            alt={product.name}
-                        />
-                        <CardContent>
-                            <Typography variant="h6">{product.name}</Typography>
-                            <Typography>{product.price}</Typography>
-                            <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-                                Buy Now
-                            </Button>
-                        </CardContent>
-                    </ProductCard>
-                ))}
+                {isLoading ? (
+                    Array.from(new Array(5)).map((_, index) => (
+                        <ProductCard key={index} sx={{ width: { xs: '270px !important', sm: '240px !important' } }}>
+                            <Skeleton variant="rectangular" width={230} sx={{ margin: '0 auto', height: { xs: 170, sm: 230 } }} />
+                            <CardContent>
+                                <Skeleton variant="text" sx={{ fontSize: '1rem', width: '80%' }} />
+                                <Skeleton variant="text" sx={{ fontSize: '1.2rem', width: '60%' }} />
+                                <Skeleton variant="rectangular" width="100%" height={36} sx={{ mt: 2 }} />
+                            </CardContent>
+                        </ProductCard>
+                    ))
+                ) : (
+                    products.map((product) => (
+                        <ProductCard key={product._id} sx={{ width: { xs: '270px !important', sm: '240px !important' } }}>
+                            <CardMedia
+                                component="img"
+                                image={product.image}
+                                alt={product.title}
+                                sx={{ width: 230, height: { xs: 170, sm: 230 }, objectFit: 'cover', margin: '0 auto' }}
+                            />
+                            <CardContent>
+                                <Typography
+                                    sx={{
+                                        fontWeight: 500,
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        WebkitLineClamp: 2,
+                                        maxHeight: '3.2em',
+                                        my: 1,
+                                    }}
+                                >
+                                    {product.title}
+                                </Typography>
+                                <Typography sx={{ mt: 1, fontWeight: 400 }}>${product.price}</Typography>
+                                <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+                                    Buy Now
+                                </Button>
+                            </CardContent>
+                        </ProductCard>
+                    ))
+                )}
             </Slider>
         </Box>
     );
