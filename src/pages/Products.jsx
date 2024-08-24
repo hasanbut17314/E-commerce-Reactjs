@@ -1,54 +1,99 @@
-import React from 'react';
-import { Container, Card, CardMedia, CardContent, Typography, Box, Button, Pagination } from '@mui/material';
-
-const dummyProducts = [
-  { id: 1, name: 'Product 1', price: '$100', image: 'https://via.placeholder.com/200' },
-  { id: 2, name: 'Product 2', price: '$200', image: 'https://via.placeholder.com/200' },
-  { id: 3, name: 'Product 3', price: '$300', image: 'https://via.placeholder.com/200' },
-  { id: 4, name: 'Product 4', price: '$400', image: 'https://via.placeholder.com/200' },
-  { id: 5, name: 'Product 5', price: '$500', image: 'https://via.placeholder.com/200' },
-  { id: 6, name: 'Product 6', price: '$600', image: 'https://via.placeholder.com/200' },
-  { id: 7, name: 'Product 7', price: '$700', image: 'https://via.placeholder.com/200' },
-  { id: 8, name: 'Product 8', price: '$800', image: 'https://via.placeholder.com/200' },
-];
+import React, { useState } from 'react';
+import { Container, Card, CardMedia, CardContent, Typography, Box, Button, Pagination, Skeleton } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { useFetchProductsQuery } from '../services/productApi';
 
 const Products = () => {
-  const [page, setPage] = React.useState(1);
-  const itemsPerPage = 5;
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 12;
 
-  const handlePageChange = (event, value) => {
+  const handlePageChange = (_, value) => {
     setPage(value);
   };
 
-  const paginatedProducts = dummyProducts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const { data: response, isLoading } = useFetchProductsQuery({
+    page: page,
+    limit: itemsPerPage,
+  });
+
+  const products = response?.data?.products || [];
+  const totalPages = response?.data?.pagination.pages;
+
+  const skeletonArray = Array.from(new Array(itemsPerPage));
 
   return (
     <Container maxWidth="xl">
       <Typography variant="h5" sx={{ mt: 4, mb: 2, ml: { xs: 0, sm: 2 }, fontWeight: 'bold' }}>Products</Typography>
-      <Box className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        {paginatedProducts.map(product => (
-          <Card key={product.id} className="max-w-sm mx-auto">
-            <CardMedia
-              component="img"
-              image={product.image}
-              alt={product.name}
-              sx={{ width: 230, height: { xs: 170, sm: 230 }, objectFit: 'cover', margin: '0 auto' }}
-            />
-            <CardContent>
-              <Typography variant="h6">{product.name}</Typography>
-              <Typography variant="body1" sx={{ marginBottom: 2 }}>{product.price}</Typography>
-              <Button variant="contained" color="primary">Buy Now</Button>
-            </CardContent>
-          </Card>
-        ))}
+      <Box className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-3 gap-y-8">
+        {isLoading ? (
+          skeletonArray.map((_, index) => (
+            <Card
+              key={index}
+              className="max-w-sm mx-auto"
+              sx={{ width: { xs: '100%', sm: '80%', md: '90%', lg: '100%' }, margin: 'auto' }}
+            >
+              <Skeleton
+                variant="rectangular"
+                sx={{
+                  width: { xs: '100%', sm: 230 },
+                  height: { xs: 170, sm: 230 },
+                  mx: 'auto',
+                }}
+              />
+              <CardContent>
+                <Skeleton variant="text" />
+                <Skeleton variant="text" width="60%" />
+                <Skeleton variant="rectangular" height={36} width="100%" sx={{ mt: 2 }} />
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          products.map((product) => (
+            <Card
+              key={product._id}
+              className="max-w-sm mx-auto"
+              sx={{ width: { xs: '100%', sm: '80%', md: '90%', lg: '100%' }, margin: 'auto' }}
+            >
+              <CardMedia
+                component="img"
+                image={product.image}
+                alt={product.title}
+                sx={{ width: 230, height: { xs: 170, sm: 230 }, objectFit: 'cover', margin: '0 auto' }}
+              />
+              <CardContent>
+                <Typography
+                  sx={{
+                    fontWeight: 500,
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    WebkitLineClamp: 2,
+                    maxHeight: '3.2em',
+                    my: 1,
+                    fontSize: { xs: '0.8rem', sm: '1rem' },
+                  }}
+                >
+                  {product.title}
+                </Typography>
+                <Typography variant="body1" sx={{ marginBottom: 2 }}>${product.price}</Typography>
+                <Link to={`/product/${product._id}`}>
+                  <Button variant="contained" color="primary">Buy Now</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </Box>
       <Box className="flex justify-center mt-4">
-        <Pagination
-          count={Math.ceil(dummyProducts.length / itemsPerPage)}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-        />
+        {!isLoading && (
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        )}
       </Box>
     </Container>
   );

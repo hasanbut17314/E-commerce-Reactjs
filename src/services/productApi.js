@@ -26,6 +26,13 @@ export const productApi = createApi({
             },
             providesTags: ["Products"],
         }),
+        fetchProductById: builder.query({
+           query: (id) => ({
+               url: `/products/productById/${id}`,
+               method: "GET",
+           }),
+           providesTags: ["Products"], 
+        }),
         updateProduct: builder.mutation({
             query: ({id, formData}) => ({
                 url: `/products/updateProduct/${id}`,
@@ -47,6 +54,7 @@ export const productApi = createApi({
 export const { 
     useCreateProductMutation,
     useFetchProductsQuery,
+    useFetchProductByIdQuery,
     useUpdateProductMutation,
     useDeleteProductMutation
 } = productApi
