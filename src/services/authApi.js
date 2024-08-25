@@ -10,7 +10,6 @@ export const authApi = createApi({
         url: '/users/register',
         method: 'POST',
         body: credentials,
-        credentials: 'include',
       }),
     }),
     login: builder.mutation({
@@ -18,7 +17,6 @@ export const authApi = createApi({
         url: '/users/login',
         method: 'POST',
         body: credentials,
-        credentials: 'include',
       }),
     }),
     refreshAccessToken: builder.mutation({
@@ -26,14 +24,12 @@ export const authApi = createApi({
         url: '/users/recreateAccessToken',
         method: 'POST',
         body: { refreshToken },
-        credentials: 'include',
       }),
     }),
     logout: builder.mutation({
       query: () => ({
         url: '/users/logout',
         method: 'POST',
-        credentials: 'include',
       }),
     }),
   }),

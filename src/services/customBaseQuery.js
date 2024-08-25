@@ -19,7 +19,7 @@ const refreshAuthToken = async () => {
   return data.accessToken;
 };
 
-const customBaseQuery = fetchBaseQuery({ baseUrl: baseURL, credentials: 'include' });
+const customBaseQuery = fetchBaseQuery({ baseUrl: baseURL });
 
 const customBaseQueryWithReauth = async (args, api, extraOptions) => {
   const token = localStorage.getItem('accessToken');
