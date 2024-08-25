@@ -22,7 +22,6 @@ export const productApi = createApi({
                 return {
                     url: url,
                     method: "GET",
-                    credentials: "include",
                 }
             },
             providesTags: ["Products"],
