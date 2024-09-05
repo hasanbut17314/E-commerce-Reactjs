@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Button, Typography, Grid, Paper } from '@mui/material';
+import { Box, Button, Typography, Grid, Paper, Skeleton } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useFetchProductByIdQuery } from '../services/productApi';
 
@@ -41,6 +41,15 @@ const ViewProduct = () => {
         <Box sx={{ p: 3 }}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
+                    {isLoading && (
+                        <Skeleton
+                            variant="rectangular"
+                            width="100%"
+                            height="400px"
+                            sx={{ borderRadius: '10px' }}
+                            animation="wave"
+                        />
+                    )}
                     <Paper
                         elevation={0}
                         sx={{
@@ -51,7 +60,7 @@ const ViewProduct = () => {
                         }}
                     >
                         <img
-                            src={product.image || 'https://via.placeholder.com/400'}
+                            src={product.image}
                             alt={product.title}
                             style={{ width: '100%', height: 'auto', borderRadius: '10px', maxWidth: '400px', maxHeight: '400px', margin: '0 auto' }}
                             onMouseMove={handleMouseMove}
@@ -78,24 +87,45 @@ const ViewProduct = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ pl: { md: 3 }, pt: { xs: 3, md: 0 } }}>
-                        <Typography variant="h5" fontWeight="600" gutterBottom>{product.title}</Typography>
-                        <Typography paragraph dangerouslySetInnerHTML={{ __html: product.description }} />
-                        <Typography variant="h5" fontWeight="bold" color="primary" gutterBottom>${product.price}</Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                            <Typography variant="body1" color="textSecondary">Quantity:</Typography>
-                            <Typography variant="body1">{product.quantity}</Typography>
+                    {isLoading ? (
+                        <Box sx={{ pl: { md: 3 }, pt: { xs: 3, md: 0 } }}>
+                            <Skeleton
+                                variant="text"
+                                height="65px"
+                                width="100%"
+                                sx={{ mb: 2 }}
+                                animation="pulse"
+                            />
+                            {Array.from({ length: 10 }).map((_, index) => (
+                                <Skeleton
+                                    key={index}
+                                    variant="text"
+                                    width="100%"
+                                    sx={{ mb: 2 }}
+                                    animation="pulse"
+                                />
+                            ))}
                         </Box>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddShoppingCartIcon />}
-                            onClick={() => console.log("Product added to cart:", product)}
-                            disabled={product.quantity === 0}
-                        >
-                            {product.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
-                        </Button>
-                    </Box>
+                    ) : (
+                        <Box sx={{ pl: { md: 3 }, pt: { xs: 3, md: 0 } }}>
+                            <Typography variant="h5" fontWeight="600" gutterBottom>{product.title}</Typography>
+                            <Typography paragraph dangerouslySetInnerHTML={{ __html: product.description }} />
+                            <Typography variant="h5" fontWeight="bold" color="primary" gutterBottom>${product.price}</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                                <Typography variant="body1" color="textSecondary">Quantity:</Typography>
+                                <Typography variant="body1">{product.quantity}</Typography>
+                            </Box>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AddShoppingCartIcon />}
+                                onClick={() => console.log("Product added to cart:", product)}
+                                disabled={product.quantity === 0}
+                            >
+                                {product.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
+                            </Button>
+                        </Box>
+                    )}
                 </Grid>
             </Grid>
         </Box>

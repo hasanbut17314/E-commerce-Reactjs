@@ -3,13 +3,17 @@ import { CssBaseline } from '@mui/material';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Outlet } from 'react-router-dom';
+import ScrollTop from '../components/ScrollTop';
 
 function Layout() {
   return (
     <>
       <CssBaseline />
+      <ScrollTop />
       <Navbar />
-      <Outlet />
+      <main>
+        <Outlet />
+      </main>
       <Footer />
     </>
   )

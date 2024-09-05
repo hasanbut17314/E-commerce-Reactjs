@@ -3,12 +3,19 @@ import { Container, Card, CardMedia, CardContent, Typography, Box, Button, Pagin
 import { Link } from 'react-router-dom';
 import { useFetchProductsQuery } from '../services/productApi';
 
+// TODO: Review about products status
+
+
 const Products = () => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 12;
 
   const handlePageChange = (_, value) => {
     setPage(value);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   const { data: response, isLoading } = useFetchProductsQuery({

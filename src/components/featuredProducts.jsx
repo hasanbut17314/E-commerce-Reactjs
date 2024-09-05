@@ -3,6 +3,7 @@ import Slider from 'react-slick';
 import { Card, CardMedia, CardContent, Typography, Button, Box, Skeleton } from '@mui/material';
 import { useFetchProductsQuery } from '../services/productApi';
 import { styled } from '@mui/system';
+import { Link } from 'react-router-dom';
 import { NextArrow, PrevArrow } from './Arrows';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -97,9 +98,11 @@ const FeaturedProducts = () => {
                                     {product.title}
                                 </Typography>
                                 <Typography sx={{ mt: 1, fontWeight: 400 }}>${product.price}</Typography>
-                                <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-                                    Buy Now
-                                </Button>
+                                <Link to={`/product/${product._id}`}>
+                                    <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+                                        Buy Now
+                                    </Button>
+                                </Link>
                             </CardContent>
                         </ProductCard>
                     ))

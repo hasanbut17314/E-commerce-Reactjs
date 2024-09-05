@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 
 const useAuth = () => {
   const user = JSON.parse(localStorage.getItem('user'));

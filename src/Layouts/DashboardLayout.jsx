@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import DashboardSidebar from '../components/dashboard/DashboardSidebar';
 import { Outlet } from 'react-router-dom';
+import ScrollTop from '../components/ScrollTop';
 
 const DashboardLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -12,6 +13,7 @@ const DashboardLayout = () => {
   
   return (
     <div className="flex">
+      <ScrollTop />
       <DashboardSidebar handleDrawerToggle={handleDrawerToggle} mobileOpen={mobileOpen} />
       <div className="flex-grow md:ml-[200px]">
         <DashboardHeader handleDrawerToggle={handleDrawerToggle} />
