@@ -15,7 +15,7 @@ export const productApi = createApi({
             invalidatesTags: ["Products"],
         }),
         fetchProducts: builder.query({
-            query: ({page=1, limit=10, status, isFeatured} = {}) => {
+            query: ({page=1, limit=10, status='Active', isFeatured} = {}) => {
                 let url = `/products/getAllProducts?page=${page}&limit=${limit}`;
                 if (status) url += `&status=${status}`;
                 if (isFeatured !== undefined) url += `&isFeatured=${isFeatured}`;
@@ -32,6 +32,13 @@ export const productApi = createApi({
                method: "GET",
            }),
            providesTags: ["Products"], 
+        }),
+        fetchByCateId: builder.query({
+            query: ({page=1, limit=10, status='Active', id} = {}) => ({
+                url: `/products/productByCateId/${id}?page=${page}&limit=${limit}&status=${status}`,
+                method: "GET",
+            }),
+            providesTags: ["Products"],
         }),
         updateProduct: builder.mutation({
             query: ({id, formData}) => ({
@@ -55,6 +62,7 @@ export const {
     useCreateProductMutation,
     useFetchProductsQuery,
     useFetchProductByIdQuery,
+    useFetchByCateIdQuery,
     useUpdateProductMutation,
     useDeleteProductMutation
 } = productApi

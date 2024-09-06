@@ -22,6 +22,7 @@ import Orders from './pages/dashboard/Orders';
 import Users from './pages/dashboard/Users';
 import Settings from './pages/dashboard/Settings';
 import ViewProduct from './pages/ViewProduct';
+import ViewCategory from './pages/ViewCategory';
 
 function App() {
 
@@ -53,6 +54,10 @@ function App() {
         {
           path: '/categories',
           element: <Category />
+        },
+        {
+          path: '/category/:id',
+          element: <ViewCategory />
         },
         {
           path: '/cart',

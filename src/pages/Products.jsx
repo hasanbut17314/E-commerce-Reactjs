@@ -3,9 +3,6 @@ import { Container, Card, CardMedia, CardContent, Typography, Box, Button, Pagin
 import { Link } from 'react-router-dom';
 import { useFetchProductsQuery } from '../services/productApi';
 
-// TODO: Review about products status
-
-
 const Products = () => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 12;
@@ -26,14 +23,12 @@ const Products = () => {
   const products = response?.data?.products || [];
   const totalPages = response?.data?.pagination.pages;
 
-  const skeletonArray = Array.from(new Array(itemsPerPage));
-
   return (
     <Container maxWidth="xl">
       <Typography variant="h5" sx={{ mt: 4, mb: 2, ml: { xs: 0, sm: 2 }, fontWeight: 'bold' }}>Products</Typography>
       <Box className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-3 gap-y-8">
         {isLoading ? (
-          skeletonArray.map((_, index) => (
+          Array.from({ length: 10 }).map((_, index) => (
             <Card
               key={index}
               className="max-w-sm mx-auto"
@@ -93,7 +88,7 @@ const Products = () => {
         )}
       </Box>
       <Box className="flex justify-center mt-4">
-        {!isLoading && (
+        {!isLoading && totalPages > 1 && (
           <Pagination
             count={totalPages}
             page={page}

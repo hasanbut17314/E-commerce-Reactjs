@@ -29,6 +29,13 @@ export const categoryApi = createApi({
             }),
             providesTags: ['Category'],
         }),
+        fetchCategoryById: builder.query({
+            query: (id) => ({
+                url: `/category/categoryById/${id}`,
+                method: 'GET',
+            }),
+            providesTags: ['Category'],
+        }),
         deleteCategory: builder.mutation({
             query: (id) => ({
                 url: `/category/deleteCategory/${id}`,
@@ -43,5 +50,6 @@ export const {
     useCreateCategoryMutation,
     useUpdateCategoryMutation,
     useFetchCategoriesQuery,
+    useFetchCategoryByIdQuery,
     useDeleteCategoryMutation
 } = categoryApi;
