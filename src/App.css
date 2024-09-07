@@ -4,6 +4,10 @@
     font-family: 'Poppins', sans-serif !important;
 }
 
+#root {
+    background-color: #f5f5f5;
+}
+
 .hero-slider .slick-dots {
     bottom: 8px !important;
 }

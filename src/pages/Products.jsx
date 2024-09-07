@@ -40,6 +40,7 @@ const Products = () => {
                   width: { xs: '100%', sm: 230 },
                   height: { xs: 170, sm: 230 },
                   mx: 'auto',
+                  my: 1,
                 }}
               />
               <CardContent>
@@ -60,7 +61,7 @@ const Products = () => {
                 component="img"
                 image={product.image}
                 alt={product.title}
-                sx={{ width: 230, height: { xs: 170, sm: 230 }, objectFit: 'cover', margin: '0 auto' }}
+                sx={{ width: 230, height: { xs: 170, sm: 230 }, objectFit: 'cover', margin: '0 auto', py: 1 }}
               />
               <CardContent>
                 <Typography
