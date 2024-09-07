@@ -48,8 +48,8 @@ const ViewCategory = () => {
             ) : (
                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', my: 3, bgcolor: '#fff', py: 3, px: { xs: 1, sm: 3 }, boxShadow: 1, borderRadius: 2 }}>
                     <div className='flex items-center justify-center flex-col sm:me-3'>
-                        <img src={category.image} alt={category.title} className='w-28 h-28 md:w-32 md:h-32' />
-                        <h3 className='md:text-lg text-base mt-3 font-semibold'>{category.title}</h3>
+                        <img src={category.image} alt={category.title} className='h-28 w-auto md:h-32 max-w-80' />
+                        <h3 className='md:text-lg text-base text-center mt-3 font-semibold'>{category.title}</h3>
                     </div>
                     <Typography variant="body1" sx={{ py: 2, px: { xs: 1, sm: 2 }, ml: { xs: 0, sm: 4 }, fontSize: { sm: '16px', xs: '14px' } }} dangerouslySetInnerHTML={{ __html: category.description }} />
                 </Box>

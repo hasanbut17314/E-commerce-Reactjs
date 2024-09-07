@@ -12,7 +12,7 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fieldError, setFieldError] = useState('');
 
-  const [signup, { isLoading, isSuccess, isError, error }] = useSignupMutation();
+  const [signup, { isLoading, isSuccess }] = useSignupMutation();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({

@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Button, Typography, Grid, Paper, Skeleton } from '@mui/material';
+import { Box, Button, Typography, Grid, Paper, Skeleton, CircularProgress } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useFetchProductByIdQuery } from '../services/productApi';
+import { useAddToCartMutation } from '../services/cartApi';
+import notify from '../utils/notify';
 
 const ViewProduct = () => {
     const { id } = useParams();
     const { data: response, isLoading } = useFetchProductByIdQuery(id);
     const product = response?.data || {};
 
+    const [addToCart, { isLoading: isAddingToCart }] = useAddToCartMutation();
+
     const [zoomStyle, setZoomStyle] = useState({});
     const [showZoom, setShowZoom] = useState(false);
-
-    if (!product) {
-        return <Typography variant="h5" color="error">Product not found</Typography>;
-    }
 
     const handleMouseMove = (e) => {
         const { left, top, width, height } = e.target.getBoundingClientRect();
@@ -36,6 +36,24 @@ const ViewProduct = () => {
     const handleMouseLeave = () => {
         setShowZoom(false);
     };
+
+    const handleAddToCart = async () => {
+        try {
+            const cartData = {
+                prod_id: product._id,
+                quantity: 1,
+            }
+            await addToCart(cartData).unwrap();
+            notify.success('Product added to cart successfully');
+        } catch (err) {
+            notify.error('Something went wrong! Product not added to cart');
+            console.log(err);
+        }
+    }
+
+    if (!product) {
+        return <Typography variant="h5" color="error">Product not found</Typography>;
+    }
 
     return (
         <Box sx={{ p: 3 }}>
@@ -115,15 +133,26 @@ const ViewProduct = () => {
                                 <Typography variant="body1" color="textSecondary">Quantity:</Typography>
                                 <Typography variant="body1">{product.quantity}</Typography>
                             </Box>
-                            <Button
+                            {product.quantity === 0 ? ( 
+                                <Button
                                 variant="contained"
                                 color="primary"
                                 startIcon={<AddShoppingCartIcon />}
-                                onClick={() => console.log("Product added to cart:", product)}
-                                disabled={product.quantity === 0}
+                                disabled
                             >
-                                {product.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
+                                Out of Stock
                             </Button>
+                            ) : (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={isAddingToCart ? <CircularProgress size={24} /> : <AddShoppingCartIcon />}
+                                onClick={handleAddToCart}
+                                disabled={isAddingToCart}
+                            >
+                                {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+                            </Button>
+                            )}
                         </Box>
                     )}
                 </Grid>
