@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box, Grid, Skeleton } from '@mui/material';
 import { styled } from '@mui/system';
+import { Link } from 'react-router-dom';
 import { useFetchCategoriesQuery } from '../services/categoryApi';
 
 const CategoryCard = styled(Card)(({ theme }) => ({
@@ -39,14 +40,16 @@ const PopularCategories = () => {
         ) : (
           categories.map((category) => (
             <Grid item key={category._id} xs={6} sm={3.4} md={3.4} lg={2.4}>
-              <CategoryCard sx={{ height: '215px' }}>
-                <img className='w-24 h-24 mx-auto' src={category.image} alt={category.title} />
-                <CardContent sx={{ px: 0, pb: 0, pt: 1 }}>
-                  <Typography sx={{ fontWeight: 600, mt: 2 }}>
-                    {category.title}
-                  </Typography>
-                </CardContent>
-              </CategoryCard>
+              <Link to={`/category/${category._id}`}>
+                <CategoryCard sx={{ height: '215px' }}>
+                  <img className='w-24 h-24 mx-auto' src={category.image} alt={category.title} />
+                  <CardContent sx={{ px: 0, pb: 0, pt: 1 }}>
+                    <Typography sx={{ fontWeight: 600, mt: 2 }}>
+                      {category.title}
+                    </Typography>
+                  </CardContent>
+                </CategoryCard>
+              </Link>
             </Grid>
           ))
         )}

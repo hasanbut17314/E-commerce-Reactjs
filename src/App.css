@@ -12,24 +12,41 @@
     color: #fff !important;
 }
 
-.featuredSlider .css-1kd2knt-MuiButtonBase-root-MuiIconButton-root::before {
-    display: none !important;
-}
-
-.featuredSlider .css-1kd2knt-MuiButtonBase-root-MuiIconButton-root {
-    display: inline-flex !important;
-    padding: 20px !important;
-    background-color: rgb(133, 133, 133);
-}
-
-.featuredSlider .css-1kd2knt-MuiButtonBase-root-MuiIconButton-root:hover {
-    background-color: rgb(67, 67, 67);
-    color: #fff !important;
+.featuredSlider .slick-arrow {
+    background-color: rgb(67, 67, 67) !important;
+    border-radius: 50%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 .featuredSlider .slick-prev {
-    padding-left: 23px !important;
-    padding-right: 18px !important;
+    padding: 15px !important;
+    padding-right: 17px !important;
+    padding-bottom: 17px !important;
+    left: -12px !important;
+}
+
+.featuredSlider .slick-prev::before {
+    content: '\276E' !important;
+}
+
+.featuredSlider .slick-next {
+    padding: 15px !important;
+    padding-left: 17px !important;
+    padding-bottom: 17px !important;
+    right: -12px !important;
+}
+
+.featuredSlider .slick-next::before {
+    content: '\276F' !important;
+}
+
+.featuredSlider .slick-prev,
+.featuredSlider .slick-next {
+    height: 38px !important;
+    width: 38px !important;
+    z-index: 5;
 }
 
 .featuredSlider .slick-slide {
@@ -59,10 +76,10 @@
 
 @media screen and (max-width: 600px) {
     .featuredSlider .slick-prev {
-        left: 0 !important;
+        left: 6px !important;
     }
 
     .featuredSlider .slick-next {
-        right: 0 !important;
+        right: 6px !important;
     }
 }

@@ -4,7 +4,6 @@ import { Card, CardMedia, CardContent, Typography, Button, Box, Skeleton } from 
 import { useFetchProductsQuery } from '../services/productApi';
 import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
-import { NextArrow, PrevArrow } from './Arrows';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -14,7 +13,7 @@ const ProductCard = styled(Card)(({ theme }) => ({
 
 const FeaturedProducts = () => {
 
-    const { data: productsData, isLoading, error } = useFetchProductsQuery({ limit: 5, isFeatured: true });
+    const { data: productsData, isLoading } = useFetchProductsQuery({ limit: 5, isFeatured: true });
     const products = productsData?.data?.products || [];
 
     const settings = {
@@ -24,8 +23,6 @@ const FeaturedProducts = () => {
         slidesToShow: 5,
         slidesToScroll: 1,
         arrows: !isLoading,
-        nextArrow: <NextArrow />,
-        prevArrow: <PrevArrow />,
         responsive: [
             {
                 breakpoint: 1200,
@@ -47,7 +44,7 @@ const FeaturedProducts = () => {
                 },
             },
             {
-                breakpoint: 580,
+                breakpoint: 600,
                 settings: {
                     slidesToShow: 1,
                     dots: false
@@ -65,7 +62,7 @@ const FeaturedProducts = () => {
                 {isLoading ? (
                     Array.from(new Array(5)).map((_, index) => (
                         <ProductCard key={index} sx={{ width: { xs: '270px !important', sm: '240px !important' } }}>
-                            <Skeleton variant="rectangular" width={230} sx={{ margin: '0 auto', height: { xs: 170, sm: 230 } }} />
+                            <Skeleton variant="rectangular" width={230} sx={{ margin: '0 auto', height: 230 }} />
                             <CardContent>
                                 <Skeleton variant="text" sx={{ fontSize: '1rem', width: '80%' }} />
                                 <Skeleton variant="text" sx={{ fontSize: '1.2rem', width: '60%' }} />
@@ -80,7 +77,7 @@ const FeaturedProducts = () => {
                                 component="img"
                                 image={product.image}
                                 alt={product.title}
-                                sx={{ width: 230, height: { xs: 170, sm: 230 }, objectFit: 'cover', margin: '0 auto' }}
+                                sx={{ width: 230, height: 230, objectFit: 'cover', margin: '0 auto' }}
                             />
                             <CardContent>
                                 <Typography
