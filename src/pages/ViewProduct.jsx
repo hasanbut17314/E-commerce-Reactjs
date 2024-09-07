@@ -46,8 +46,11 @@ const ViewProduct = () => {
             await addToCart(cartData).unwrap();
             notify.success('Product added to cart successfully');
         } catch (err) {
+            if(err.originalStatus === 401) {
+                notify.error('Please login first');
+            } else {
             notify.error('Something went wrong! Product not added to cart');
-            console.log(err);
+            }
         }
     }
 
