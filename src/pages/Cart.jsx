@@ -50,10 +50,10 @@ const Cart = () => {
       </div>
 
       {cartItems.map((item) => (
-        <div key={item.id} className="flex justify-between items-center mb-4 p-4 border rounded-lg">
-          <div className="flex items-center">
-            <img src={`https://via.placeholder.com/100`} alt={item.name} className="w-20 h-20 mr-4" />
-            <div>
+        <div key={item.id} className="flex sm:flex-row flex-col justify-between items-center mb-4 p-4 border rounded-lg bg-white">
+          <div className="flex sm:flex-row flex-col items-center">
+            <img src={`https://via.placeholder.com/100`} alt={item.name} className="w-20 h-20 sm:mr-4 mr-0" />
+            <div className='sm:mt-0 mt-2'>
               <Typography variant="body1">{item.name}</Typography>
               <Typography variant="body2">${item.price.toFixed(2)}</Typography>
             </div>
@@ -62,7 +62,7 @@ const Cart = () => {
             <IconButton onClick={() => handleDecrement(item.id)}>
               <RemoveIcon />
             </IconButton>
-            <Typography variant="body2" className="mx-2">
+            <Typography className="mx-3">
               {item.quantity}
             </Typography>
             <IconButton onClick={() => handleIncrement(item.id)}>
@@ -75,9 +75,9 @@ const Cart = () => {
       <div className="flex justify-between items-center mt-6">
         <Typography variant="h6">Total: ${totalPrice.toFixed(2)}</Typography>
         <Link to='/checkout'>
-        <Button variant="contained" color="primary">
-          Checkout
-        </Button>
+          <Button variant="contained" color="primary">
+            Checkout
+          </Button>
         </Link>
       </div>
     </div>

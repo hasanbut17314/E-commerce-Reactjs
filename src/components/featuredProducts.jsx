@@ -89,6 +89,7 @@ const FeaturedProducts = () => {
                                         textOverflow: 'ellipsis',
                                         WebkitLineClamp: 2,
                                         maxHeight: '3.2em',
+                                        fontSize: {xs: '0.8rem', sm: '1rem'},
                                         my: 1,
                                     }}
                                 >
