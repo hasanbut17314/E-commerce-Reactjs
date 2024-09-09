@@ -1,39 +1,37 @@
-import React, { useState } from 'react';
-import { IconButton, Typography, Button } from '@mui/material';
+import React from 'react';
+import { IconButton, Typography, Button, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Link } from 'react-router-dom';
+import { useGetCartQuery } from '../services/cartApi';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Product 1', price: 100, quantity: 1 },
-    { id: 2, name: 'Product 2', price: 200, quantity: 1 },
-  ]);
+  const { data: response, isLoading, error } = useGetCartQuery();
+  const cartItems = response?.data?.prod_items || [];
 
-  const handleIncrement = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
+  // Dummy total price calculation
+  const totalPrice = cartItems.reduce((acc, item) => acc + (item.quantity * item.price), 0);
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return <Typography color="error">Failed to load cart: {error.message}</Typography>;
+  }
+
+  const handleEmptyCart = () => {
+    // Implement empty cart functionality
   };
 
   const handleDecrement = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
+    // Implement decrement quantity functionality
   };
 
-  const handleEmptyCart = () => {
-    setCartItems([]);
+  const handleIncrement = (id) => {
+    // Implement increment quantity functionality
   };
-
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="px-6 pb-5 pt-14 max-w-4xl mx-auto">
@@ -49,28 +47,32 @@ const Cart = () => {
         </Button>
       </div>
 
-      {cartItems.map((item) => (
-        <div key={item.id} className="flex sm:flex-row flex-col justify-between items-center mb-4 p-4 border rounded-lg bg-white">
-          <div className="flex sm:flex-row flex-col items-center">
-            <img src={`https://via.placeholder.com/100`} alt={item.name} className="w-20 h-20 sm:mr-4 mr-0" />
-            <div className='sm:mt-0 mt-2'>
-              <Typography variant="body1">{item.name}</Typography>
-              <Typography variant="body2">${item.price.toFixed(2)}</Typography>
+      {cartItems.length > 0 ? (
+        cartItems.map((item) => (
+          <div key={item._id} className="flex sm:flex-row flex-col justify-between items-center mb-4 p-4 border rounded-lg bg-white">
+            <div className="flex sm:flex-row flex-col items-center">
+              <img src={`https://via.placeholder.com/100`} alt={item.name} className="w-20 h-20 sm:mr-4 mr-0" />
+              <div className='sm:mt-0 mt-2'>
+                <Typography variant="body1">{item.name}</Typography>
+                <Typography variant="body2">${item.price.toFixed(2)}</Typography>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <IconButton onClick={() => handleDecrement(item._id)}>
+                <RemoveIcon />
+              </IconButton>
+              <Typography className="mx-3">
+                {item.quantity}
+              </Typography>
+              <IconButton onClick={() => handleIncrement(item._id)}>
+                <AddIcon />
+              </IconButton>
             </div>
           </div>
-          <div className="flex items-center">
-            <IconButton onClick={() => handleDecrement(item.id)}>
-              <RemoveIcon />
-            </IconButton>
-            <Typography className="mx-3">
-              {item.quantity}
-            </Typography>
-            <IconButton onClick={() => handleIncrement(item.id)}>
-              <AddIcon />
-            </IconButton>
-          </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <Typography>No items in cart.</Typography>
+      )}
 
       <div className="flex justify-between items-center mt-6">
         <Typography variant="h6">Total: ${totalPrice.toFixed(2)}</Typography>

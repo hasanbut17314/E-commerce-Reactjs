@@ -49,7 +49,7 @@ export const cartApi = createApi({
 });
 
 export const {
-    usegetCartQuery,
+    useGetCartQuery,
     useAddToCartMutation,
     useUpdateItemQuantityMutation,
     useDeleteItemFromCartMutation,
