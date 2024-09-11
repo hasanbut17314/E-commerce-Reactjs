@@ -39,14 +39,14 @@ const Checkout = () => {
           </Typography>
 
           {isLoading ? (
-            [1, 2, 3].map((_, index) => (
+            [1, 2].map((_, index) => (
               <Box key={index} className="flex justify-between items-center mb-4">
                 <Skeleton variant="rectangular" width={60} height={60} />
                 <Box className="ml-4" sx={{ flexGrow: 1 }}>
                   <Skeleton variant="text" width="90%" />
                   <Skeleton variant="text" width="60%" />
                 </Box>
-                <Skeleton variant="text" width="50px" />
+                <Skeleton sx={{ display: { xs: 'none', sm: 'block' }}} variant="text" width="50px" />
               </Box>
             ))
           ) : (
