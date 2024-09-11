@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   IconButton,
   Typography,
   Button,
   Skeleton,
   Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  DialogContentText,
+  CircularProgress
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -14,16 +20,40 @@ import { Link } from 'react-router-dom';
 import notify from '../utils/notify';
 import { useGetCartQuery } from '../services/cartApi';
 import { useDeleteItemFromCartMutation } from '../services/cartApi';
+import { useEmptyCartMutation } from '../services/cartApi';
+import { useUpdateItemQuantityMutation } from '../services/cartApi';
 
 const Cart = () => {
-  const { data: response, isLoading, error } = useGetCartQuery();
-  const cart = response?.data || {};
-  const cartItems = response?.data?.prod_items || [];
 
-  const [deleteItem, {isLoading: isRemoving}] = useDeleteItemFromCartMutation();
+  const [openEmpty, setOpenEmpty] = useState(false);
+
+  const { data: response, isLoading, error } = useGetCartQuery();
+  const cart = response?.data?.cart || {};
+  const cartItems = response?.data?.cart.prod_items || [];
+  const total = response?.data?.total < 1;
+
+  const [deleteItem, { isLoading: isRemoving }] = useDeleteItemFromCartMutation();
+
+  const [emptyCart, { isLoading: emptyLoading }] = useEmptyCartMutation();
+
+  const [updateItemQuantity, { isLoading: isUpdating }] = useUpdateItemQuantityMutation();
 
   const handleEmptyCart = () => {
-    // Implement empty cart functionality
+    setOpenEmpty(true);
+  };
+
+  const handleEmptyClose = () => {
+    setOpenEmpty(false);
+  };
+
+  const handleEmptyClick = async () => {
+    try {
+      await emptyCart().unwrap();
+      notify.success('Cart emptied successfully!');
+      handleEmptyClose();
+    } catch (error) {
+      notify.error(error.message || 'Something went wrong! Please try again.');
+    }
   };
 
   const handleRemoveItem = async (id) => {
@@ -35,12 +65,16 @@ const Cart = () => {
     }
   };
 
-  const handleDecrement = (id) => {
-    // Implement decrement quantity functionality
+  const handleDecrement = (id, quantity) => {
+    if (quantity > 1) {
+      const updateDetails = { prod_id: id, quantity: quantity - 1 };
+      updateItemQuantity(updateDetails)
+    }
   };
 
-  const handleIncrement = (id) => {
-    // Implement increment quantity functionality
+  const handleIncrement = (id, quantity) => {
+      const updateDetails = { prod_id: id, quantity: quantity + 1 };
+      updateItemQuantity(updateDetails)
   };
 
   if (isLoading) {
@@ -84,6 +118,7 @@ const Cart = () => {
           color="secondary"
           startIcon={<DeleteIcon />}
           onClick={handleEmptyCart}
+          disabled={total}
         >
           Empty Cart
         </Button>
@@ -128,16 +163,18 @@ const Cart = () => {
               <div className="flex items-center border rounded-md bg-gray-100 px-2 py-1">
                 <IconButton
                   size="small"
-                  onClick={() => handleDecrement(item.prod_id)}
+                  onClick={() => handleDecrement(item.prod_id, item.quantity)}
                   sx={{ padding: '3px', color: 'black' }}
+                  disabled={isUpdating}
                 >
                   <RemoveIcon />
                 </IconButton>
                 <Typography className="mx-3 px-2">{item.quantity}</Typography>
                 <IconButton
                   size="small"
-                  onClick={() => handleIncrement(item.prod_id)}
+                  onClick={() => handleIncrement(item.prod_id, item.quantity)}
                   sx={{ padding: '3px', color: 'black' }}
+                  disabled={isUpdating}
                 >
                   <AddIcon />
                 </IconButton>
@@ -163,12 +200,35 @@ const Cart = () => {
         <Typography sx={{ fontSize: '1.1rem', fontWeight: 600, display: 'flex', alignItems: 'center' }}>
           Total: <p className='text-blue-700 font-bold ms-2'>${cart.total_price?.toFixed(2)}</p>
         </Typography>
-        <Link to="/checkout">
-          <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" disabled={total}>
+          <Link to="/checkout">
             Checkout
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
+
+      <Dialog
+        open={openEmpty}
+        onClose={handleEmptyClose}
+      >
+        <DialogTitle textAlign={'center'}>
+          Empty Cart !
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText textAlign={'center'}>
+            Are you sure you want to empty your cart?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', gap: 2, pb: 3 }}>
+          {!emptyLoading && <Button onClick={handleEmptyClose} color="primary" variant='outlined'>
+            Cancel
+          </Button>}
+          <Button onClick={handleEmptyClick} color="error" variant='contained' autoFocus disabled={emptyLoading}>
+            {emptyLoading ? <CircularProgress size={24} /> : 'Empty'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
   );
 };

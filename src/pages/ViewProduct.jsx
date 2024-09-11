@@ -46,10 +46,10 @@ const ViewProduct = () => {
             await addToCart(cartData).unwrap();
             notify.success('Product added to cart successfully');
         } catch (err) {
-            if(err.originalStatus === 401) {
+            if (err.originalStatus === 401) {
                 notify.error('Please login first');
             } else {
-            notify.error('Something went wrong! Product not added to cart');
+                notify.error('Something went wrong! Product not added to cart');
             }
         }
     }
@@ -62,7 +62,7 @@ const ViewProduct = () => {
         <Box sx={{ p: 3 }}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                    {isLoading && (
+                    {isLoading ? (
                         <Skeleton
                             variant="rectangular"
                             width="100%"
@@ -70,42 +70,43 @@ const ViewProduct = () => {
                             sx={{ borderRadius: '10px' }}
                             animation="wave"
                         />
-                    )}
-                    <Paper
-                        elevation={0}
-                        sx={{
-                            p: 2,
-                            textAlign: 'center',
-                            position: 'relative',
-                            '&:hover .zoom-lens': { opacity: 1 },
-                        }}
-                    >
-                        <img
-                            src={product.image}
-                            alt={product.title}
-                            style={{ width: '100%', height: 'auto', borderRadius: '10px', maxWidth: '400px', maxHeight: '400px', margin: '0 auto' }}
-                            onMouseMove={handleMouseMove}
-                            onMouseLeave={handleMouseLeave}
-                        />
-                        {showZoom && (
-                            <Box
-                                className="zoom-lens"
-                                sx={{
-                                    position: 'absolute',
-                                    width: '200px',
-                                    height: '200px',
-                                    border: '1px solid #ddd',
-                                    borderRadius: '50%',
-                                    backgroundImage: `url(${product.image})`,
-                                    backgroundSize: '200%',
-                                    pointerEvents: 'none',
-                                    zIndex: 10,
-                                    opacity: 0,
-                                    ...zoomStyle,
-                                }}
+                    ) : (
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                p: 2,
+                                textAlign: 'center',
+                                position: 'relative',
+                                '&:hover .zoom-lens': { opacity: 1 },
+                            }}
+                        >
+                            <img
+                                src={product.image}
+                                alt={product.title}
+                                style={{ width: '100%', height: 'auto', borderRadius: '10px', maxWidth: '400px', maxHeight: '400px', margin: '0 auto' }}
+                                onMouseMove={handleMouseMove}
+                                onMouseLeave={handleMouseLeave}
                             />
-                        )}
-                    </Paper>
+                            {showZoom && (
+                                <Box
+                                    className="zoom-lens"
+                                    sx={{
+                                        position: 'absolute',
+                                        width: '200px',
+                                        height: '200px',
+                                        border: '1px solid #ddd',
+                                        borderRadius: '50%',
+                                        backgroundImage: `url(${product.image})`,
+                                        backgroundSize: '200%',
+                                        pointerEvents: 'none',
+                                        zIndex: 10,
+                                        opacity: 0,
+                                        ...zoomStyle,
+                                    }}
+                                />
+                            )}
+                        </Paper>
+                    )}
                 </Grid>
                 <Grid item xs={12} md={6}>
                     {isLoading ? (
@@ -136,25 +137,25 @@ const ViewProduct = () => {
                                 <Typography variant="body1" color="textSecondary">Quantity:</Typography>
                                 <Typography variant="body1">{product.quantity}</Typography>
                             </Box>
-                            {product.quantity === 0 ? ( 
+                            {product.quantity === 0 ? (
                                 <Button
-                                variant="contained"
-                                color="primary"
-                                startIcon={<AddShoppingCartIcon />}
-                                disabled
-                            >
-                                Out of Stock
-                            </Button>
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<AddShoppingCartIcon />}
+                                    disabled
+                                >
+                                    Out of Stock
+                                </Button>
                             ) : (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                startIcon={isAddingToCart ? <CircularProgress size={24} /> : <AddShoppingCartIcon />}
-                                onClick={handleAddToCart}
-                                disabled={isAddingToCart}
-                            >
-                                {isAddingToCart ? 'Adding...' : 'Add to Cart'}
-                            </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={isAddingToCart ? <CircularProgress size={24} /> : <AddShoppingCartIcon />}
+                                    onClick={handleAddToCart}
+                                    disabled={isAddingToCart}
+                                >
+                                    {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+                                </Button>
                             )}
                         </Box>
                     )}

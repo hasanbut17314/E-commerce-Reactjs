@@ -4,6 +4,7 @@ import { Search, ShoppingCart, AccountCircle, Menu as MenuIcon } from '@mui/icon
 import logo2 from '../assets/marty_second.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../services/authApi';
+import { useGetCartQuery } from '../services/cartApi';
 import useAuth from '../hooks/useAuth';
 import notify from '../utils/notify';
 
@@ -106,6 +107,9 @@ const Navbar = () => {
     </MenuItem>,
   ];
 
+  const { data: cart } = useGetCartQuery();
+  const totalItems = cart?.data?.total || 0;
+
   return (
     <AppBar position="static" sx={{ bgcolor: 'primary.main' }}>
       <Container maxWidth="xl" sx={{ paddingX: { xs: 0, md: 2 } }}>
@@ -131,7 +135,7 @@ const Navbar = () => {
             </IconButton>
             <Link to={isAuthenticated ? '/cart' : '/login'}>
               <IconButton color="inherit">
-                <Badge invisible={false} badgeContent={4} color="error">
+                <Badge invisible={false} badgeContent={totalItems} color="error">
                   <ShoppingCart />
                 </Badge>
               </IconButton>

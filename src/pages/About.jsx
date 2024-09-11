@@ -32,7 +32,7 @@ const About = () => {
 
   return (
     <>
-    <Box sx={{ paddingX: { xs: 2, sm: 6 }, pt: 6, backgroundColor: 'background.default' }}>
+    <Box sx={{ paddingX: { xs: 2, sm: 6 }, pt: 6 }}>
       <Container>
         <Box sx={{ marginBottom: (theme) => theme.spacing(6) }}>
           <Typography variant="h5" gutterBottom>About Us</Typography>
