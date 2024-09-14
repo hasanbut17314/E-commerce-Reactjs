@@ -12,7 +12,7 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fieldError, setFieldError] = useState('');
 
-  const [signup, { isLoading, isSuccess }] = useSignupMutation();
+  const [signup, { isLoading }] = useSignupMutation();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -41,9 +41,7 @@ const Signup = () => {
     }
     try {
       await signup(form).unwrap();
-      if (isSuccess) {
-        notify.success('Account created successfully');
-      }
+      notify.success('Registered successfully! Please check your email to verify your account');
       setForm({
         username: '',
         email: '',
@@ -52,12 +50,10 @@ const Signup = () => {
       })
       navigate('/login');
     } catch (error) {
-      if (error.data) {
-        const err = error.data.non_field_errors;
-        const errMsg = Array.isArray(err) ? err.join(', ') : err;
-        notify.error(errMsg);
+      if(error.originalStatus === 406) {
+        notify.error('Email or username already exists');
       } else {
-        notify.error('Something went wrong')
+        notify.error('Something went wrong');
       }
     }
   };
@@ -144,8 +140,8 @@ const Signup = () => {
           />
           {fieldError && <Typography variant="body2" color="error">{fieldError}</Typography>}
           <Box className="flex justify-center mt-6">
-            <Button variant="contained" color="primary" disabled={isLoading} type="submit">
-              {isLoading ? <CircularProgress size={24} /> : 'Sign Up'}
+            <Button variant="contained" color="primary" disabled={isLoading} type="submit" startIcon={isLoading ? <CircularProgress size={22} /> : null}>
+              {isLoading ? 'Loading' : 'Sign Up'}
             </Button>
           </Box>
         </form>

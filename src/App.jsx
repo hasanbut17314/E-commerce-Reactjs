@@ -23,6 +23,7 @@ import Users from './pages/dashboard/Users';
 import Settings from './pages/dashboard/Settings';
 import ViewProduct from './pages/ViewProduct';
 import ViewCategory from './pages/ViewCategory';
+import VerifyEmail from './pages/VerifyEmail';
 
 function App() {
 
@@ -76,6 +77,10 @@ function App() {
     {
       path: '/signup',
       element: <Signup />
+    },
+    {
+      path: '/verify-email/:token',
+      element: <VerifyEmail />
     },
     {
       path: '/dashboard',

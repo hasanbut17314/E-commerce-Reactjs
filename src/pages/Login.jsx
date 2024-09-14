@@ -52,7 +52,11 @@ const Login = () => {
       }
 
     } catch (err) {
-      setLoginError(err.message || 'Invalid username or password');
+      if (err.originalStatus === 402) {
+        notify.error('Please verify your email first');
+      } else {
+        setLoginError(err.message || 'Invalid username or password');
+      }
     }
   };
 
@@ -101,8 +105,8 @@ const Login = () => {
           />
           {loginError && <Typography variant="body2" color="error">{loginError}</Typography>}
           <Box className="flex justify-center mt-3">
-            <Button variant="contained" disabled={isLoading} color="primary" type="submit">
-              {isLoading ? <CircularProgress size={24} /> : 'Login'}
+            <Button variant="contained" disabled={isLoading} color="primary" type="submit" startIcon={isLoading ? <CircularProgress size={22} /> : null}>
+              {isLoading ? 'Loading' : 'Login'}
             </Button>
           </Box>
         </form>
