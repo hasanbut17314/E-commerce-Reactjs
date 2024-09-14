@@ -2,6 +2,7 @@ import React from 'react'
 import { useVerifyEmailMutation } from '../services/authApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import notify from '../utils/notify';
+import { Button, CircularProgress } from '@mui/material';
 
 const VerifyEmail = () => {
 
@@ -22,13 +23,16 @@ const VerifyEmail = () => {
     return (
         <div className='text-center mt-5'>
             <h1 className='text-xl'>Click on Verify button to verify your email</h1>
-            <button
-                className='btn bg-green-400 px-5 py-2 rounded-md text-white font-semibold mt-3'
-                onClick={verify}
-                disabled={isLoading}
+            <Button
+            onClick={verify}
+            variant="contained"
+            color="primary"
+            disabled={isLoading}
+            startIcon={isLoading && <CircularProgress size={22} />}
+            sx={{ mt: 2, textTransform: 'capitalize', fontSize: '16px' }}
             >
-                Verify
-            </button>
+                {isLoading ? 'Verifying...' : 'Verify'}
+            </Button>
         </div>
     )
 }
