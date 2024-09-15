@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Badge, Menu, MenuItem, Box, InputBase, Modal, Container, Drawer, Divider } from '@mui/material';
 import { Search, ShoppingCart, AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import CategoryIcon from '@mui/icons-material/Category';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import logo2 from '../assets/marty_second.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useLogoutMutation } from '../services/authApi';
@@ -172,23 +183,23 @@ const Navbar = () => {
           onKeyDown={toggleDrawer(false)}
           className="sm-navbar"
         >
-          <NavLink to='/'>Home</NavLink>
-          <NavLink to='/about'>About</NavLink>
-          <NavLink to='/products'>Products</NavLink>
-          <NavLink to='/categories'>Categories</NavLink>
-          <NavLink to='/contact'>Contact Us</NavLink>
+          <NavLink to='/'><HomeIcon />Home</NavLink>
+          <NavLink to='/about'><InfoIcon />About</NavLink>
+          <NavLink to='/products'><InventoryIcon />Products</NavLink>
+          <NavLink to='/categories'><CategoryIcon />Categories</NavLink>
+          <NavLink to='/contact'><ContactMailIcon />Contact Us</NavLink>
           <Divider />
           {isAuthenticated ? (
             <>
-              <NavLink>Account</NavLink>
-              <NavLink>Track Order</NavLink>
-              <NavLink>Settings</NavLink>
-              <Link onClick={handleLogout} disabled={isLoading}>Logout</Link>
+              <NavLink><AccountCircleIcon />Account</NavLink>
+              <NavLink><LocalShippingIcon />Track Order</NavLink>
+              <NavLink><SettingsIcon />Settings</NavLink>
+              <Link onClick={handleLogout} disabled={isLoading}><LogoutIcon />Logout</Link>
             </>
           ) : (
             <>
-              <NavLink to='/login'>Login</NavLink>
-              <NavLink to='/signup'>Sign Up</NavLink>
+              <NavLink to='/login'><LoginIcon />Login</NavLink>
+              <NavLink to='/signup'><HowToRegIcon />Sign Up</NavLink>
             </>
           )}
         </Box>

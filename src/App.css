@@ -62,6 +62,12 @@ body {
 .sm-navbar a {
     font-size: 1rem;
     padding: 12px 14px;
+    display: flex;
+    align-items: center;
+}
+
+.sm-navbar .css-i4bv87-MuiSvgIcon-root {
+    margin-inline-end: 15px;
 }
 
 .service h5 {
