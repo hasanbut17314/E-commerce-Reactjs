@@ -1,4 +1,3 @@
-import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { store } from './App/store';
 import { Provider } from 'react-redux';

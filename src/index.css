@@ -65,6 +65,7 @@ body {
 
 .sm-navbar a {
     font-size: 1rem;
+    font-weight: 600 !important;
     padding: 12px 14px;
     display: flex !important;
     align-items: center !important;
