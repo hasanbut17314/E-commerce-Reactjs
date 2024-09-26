@@ -62,10 +62,9 @@ const Newsletter = () => {
   const theme = useTheme();
 
   return (
-    <Container sx={{ mt: { xs: 8, sm: 12 }, mb: 4 }}>
-      <NewsletterContainer theme={theme}>
+      <NewsletterContainer theme={theme} sx={{ mt: { xs: 8, sm: 12 }, mb: 4, mx: { xs: 1, sm: 4 } }}>
         <NewsletterIcon theme={theme} />
-        <NewsletterTitle variant="h4" theme={theme}>Subscribe to Our Newsletter</NewsletterTitle>
+        <NewsletterTitle variant="h4" theme={theme} sx={{fontSize: {xs: '1.4rem', sm: '1.5rem'}}}>Subscribe to Our Newsletter</NewsletterTitle>
         <NewsletterDescription variant="body1" theme={theme}>
           Get the latest updates and offers.
         </NewsletterDescription>
@@ -81,7 +80,6 @@ const Newsletter = () => {
           </NewsletterButton>
         </NewsletterForm>
       </NewsletterContainer>
-    </Container>
   );
 };
 
